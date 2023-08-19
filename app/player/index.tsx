@@ -1,68 +1,44 @@
 import { StyleSheet, View } from 'react-native'
 import React, { useEffect, useMemo } from 'react'
 import { WebView } from 'react-native-webview';
-import { Button, SegmentedButtons, Text } from 'react-native-paper';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { theme } from '../../style/theme';
-import { MaterialIcons } from '@expo/vector-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { tv } from '../../utils/constants';
-import { tvActions } from '../../store/context/tvSlice';
 import { ScrollView } from 'react-native-gesture-handler';
 import Movie from './Movie';
 import { myListActions } from '../../store/context/myListSlice';
-import { playerAction } from '../../store/context/playerSlice';
 import TV from './TV';
 import Anime from './Anime';
+import { useKeepAwake } from 'expo-keep-awake';
 
 
 
 const Player = () => {
     const dispatch = useAppDispatch()
-    const { sources, type, result } = useLocalSearchParams()
-    console.log(sources)
-    const src = useAppSelector((state) => state.player.src)
-    const video = React.useRef<WebView>(null);
+
+    useKeepAwake();
     
+    const { sources, type, result } = useLocalSearchParams()
     const srcs = JSON.parse(sources as string)
     const data = JSON.parse(result as string)
 
-    const XView = ({ type }: { type: string}) => {
+    const XView = ({ type }: { type: string }) => {
         switch (type) {
             case 'tv':
                 return <TV data={data} srcs={srcs} />
             case 'movie':
                 return <Movie data={data} srcs={srcs} />
-            default:
+            case 'anime':
                 return <Anime data={data} srcs={srcs} />
         }
     }
-
-    useEffect(() => {
-        dispatch(playerAction.setSrc(srcs[0].url))
-    }, [])
 
     return (
         <ScrollView style={styles.container}>
             <Stack.Screen options={{
                 headerShown: false,
             }} />
-            <View style={styles.video}>
-                <WebView
-                    ref={video}
-                    allowsFullscreenVideo={true}
-                    allowsInlineMediaPlayback={true}
-                    mediaPlaybackRequiresUserAction={false}
-                    mediaCapturePermissionGrantType='grant'
-                    onLoadEnd={() => {
-                        setTimeout(() => {
-                            dispatch(myListActions.addToLastWatched(data))
-                        }, 10000);
-                    }}
-                    source={{
-                        uri: src,
-                    }} />
-            </View>
+            <Video data={data} type={type as string} />
 
             {/* <Button mode="contained" style={{ marginVertical: 10 }} onPress={() => {
                 video.current?.reload()
@@ -89,3 +65,37 @@ const styles = StyleSheet.create({
     },
 
 })
+
+function Video(
+    { data, type }: {
+        data: any,
+        type: string,
+    }
+) {
+    const video = React.useRef<WebView>(null);
+    const dispatch = useAppDispatch()
+
+    const src = useAppSelector((state) => state.player.src)
+
+
+    return <View style={styles.video}>
+        <WebView
+            ref={video}
+            allowsFullscreenVideo={true}
+            allowsInlineMediaPlayback={true}
+            mediaPlaybackRequiresUserAction={false}
+            mediaCapturePermissionGrantType='grant'
+            onLoadEnd={() => {
+                setTimeout(() => {
+                    console.log('add to last watched')
+                    dispatch(myListActions.addToLastWatched({
+                        ...data,
+                        type,
+                    }))
+                }, 10000);
+            }}
+            source={{
+                uri: src,
+            }} />
+    </View>
+}

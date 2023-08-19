@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { ScrollView, View, Image } from 'react-native'
+import { View, Image } from 'react-native'
 import { List, SegmentedButtons, Text } from 'react-native-paper'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { playerAction } from '../../store/context/playerSlice'
@@ -18,7 +18,7 @@ const TV = ({ data, srcs }: Props) => {
     const src = useAppSelector((state) => state.player.src)
     const { season, episode } = useAppSelector((state) => state.tv.current)
     const { episodes } = useAppSelector((state) => state.tv.season)
-    const { name , overview, episode_number, episode_type, runtime , air_date} = episodes[episode - 1]
+    const { name , overview, episode_number, runtime , air_date} = episodes[episode - 1]
 
     useEffect(() => {
         const srcs = getTVSeasonEpisodeSources(data.id.toString(), season, episode, data.external_ids.imdb_id)
@@ -52,6 +52,7 @@ const TV = ({ data, srcs }: Props) => {
             <SegmentedButtons
                 value={src}
                 onValueChange={(value) => {
+                    console.log("srcs :: ", value)
                     dispatch(playerAction.setSrc(value))
                 }}
                 buttons={srcs.map((src: any) => {

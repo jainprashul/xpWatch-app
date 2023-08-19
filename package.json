@@ -15,8 +15,10 @@
     "@reduxjs/toolkit": "^1.9.5",
     "expo": "~49.0.7",
     "expo-constants": "~14.4.2",
+    "expo-keep-awake": "~12.3.0",
     "expo-linking": "~5.0.2",
     "expo-router": "2.0.0",
+    "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
     "react": "18.2.0",
     "react-native": "0.72.3",
@@ -26,8 +28,7 @@
     "react-native-screens": "~3.22.0",
     "react-native-webview": "13.2.2",
     "react-redux": "^8.1.2",
-    "redux-persist": "^6.0.0",
-    "expo-splash-screen": "~0.20.5"
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -11,7 +11,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { has, myListActions } from '../../store/context/myListSlice'
+import { has, myListActions, selectHistoryByID } from '../../store/context/myListSlice'
+import { animeActions } from '../../store/context/animeSlice'
 
 
 const AnimeDetail = () => {
@@ -19,15 +20,25 @@ const AnimeDetail = () => {
     const { id } = useLocalSearchParams()
     const { width, height } = Dimensions.get('window')
 
+    const favorite = useAppSelector(has('anime', id as string))
+    const history = useAppSelector(selectHistoryByID(id as string))
+
+    useEffect(() => {
+        if (history) {
+            dispatch(animeActions.setEpisode(history.e))
+        }
+    }, [history])
+
     const [data, setData] = React.useState({} as AnimeX)
     const { episodes, result, similars } = data
 
     const [loading, setLoading] = React.useState(true)
 
 
-    const [episode, setEpisode] = React.useState(1)
-    const favorite = useAppSelector(has('anime', id as string))
-
+    const episode = useAppSelector(state => state.anime.current.episode)
+    const setEpisode = (e: number) => {
+        dispatch(animeActions.setEpisode(e))
+    }
 
     const source = useMemo(() => {
         const ep = episodes?.find((v) => v.number === episode)
@@ -40,6 +51,8 @@ const AnimeDetail = () => {
         console.log(id)
         getAnimeData(id as string).then((res) => {
             setData(res)
+            dispatch(animeActions.setEpisodeList(res.episodes ?? []))
+            
             setLoading(false)
         })
     }, [id])
@@ -76,7 +89,7 @@ const AnimeDetail = () => {
 
     function RemoveFromFavorite() {
         if (result)
-            dispatch(myListActions.removeAnime(result.id.toString()))
+            dispatch(myListActions.removeAnime(result.slug.toString()))
     }
 
 

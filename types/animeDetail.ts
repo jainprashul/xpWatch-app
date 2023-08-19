@@ -41,7 +41,7 @@ export interface Episode {
     description:     string;
     image:           string;
     createdAt:       Date;
-    airedAt:         Date;
+    airedAt:         string;
     sources:         Source[];
 }
 

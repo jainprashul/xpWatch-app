@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScrollView, View } from 'react-native'
 import { MovieDetail } from '../../types/movieDetail'
 import { SegmentedButtons, Text } from 'react-native-paper'
@@ -13,6 +13,10 @@ type Props = {
 const Movie = ({ data, srcs }: Props) => {
     const dispatch = useAppDispatch()
     const src = useAppSelector((state) => state.player.src)
+
+    useEffect(() => {
+        dispatch(playerAction.setSrc(srcs[0].url))
+    }, [])
 
     return (
         <View>

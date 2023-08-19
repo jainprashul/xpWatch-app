@@ -1,5 +1,4 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { TvShowsSrc, TvShowsX } from "../../utils/db"
 import { SeasonDetail } from "../../types/seasonDetail"
 
 type initState = {
@@ -12,7 +11,7 @@ type initState = {
     // show : TvShowsX
 }
 
-const initState : initState = {
+const initialState : initState = {
     current : {
         episode: 1,
         season: 1
@@ -22,7 +21,7 @@ const initState : initState = {
 
 const tvReducer = createSlice({
     name: "tv",
-    initialState: initState,
+    initialState,
     reducers: {
         setEpisode: (state, action : PayloadAction<number>) => {
             state.current.episode = action.payload

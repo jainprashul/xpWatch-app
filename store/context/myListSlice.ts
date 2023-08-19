@@ -9,14 +9,14 @@ type initState = {
     error : string | null
     search : string
     data : {
-        tv : Record<string, any>
+        tv : Record<string, TVDetails>
         movie : Record<string, MovieDetail>
-        anime : Record<string, any>
+        anime : Record<string, AnimeDetail>
         history : Record<string, {
             s : number, e : number
         }>
         watchHistory : Record<string, any>
-        lastWatched : any[]
+        lastWatched : Record<string, any>
         watchedAlready : Record<string, any>
     }
 }
@@ -53,9 +53,8 @@ const myListSlice = createSlice({
             state.data.history[id] = { s , e }
         },
         addToLastWatched(state, action : PayloadAction<any>){
-            const { id , data } = action.payload
-            state.data.lastWatched.unshift({ id , data })
-
+            const { id } = action.payload
+            state.data.lastWatched[id] = action.payload;
         },
         setData(state, action : PayloadAction<any>){
             state.data = action.payload
@@ -88,13 +87,22 @@ const myListSlice = createSlice({
             delete state.data.tv[id]
         },
         addAnime(state , action : PayloadAction<AnimeDetail>){
-            const { id  } = action.payload
-            state.data.anime[id] = action.payload;
+            const { slug } = action.payload
+            state.data.anime[slug] = action.payload;
         },
         removeAnime(state , action : PayloadAction<string>){
             const id = action.payload
             delete state.data.anime[id]
         },
+        addWatchedAlready(state , action : PayloadAction<any>){
+            const { id , slug } = action.payload
+            state.data.watchedAlready[slug ?? id] = action.payload;
+        },
+        removeWatchedAlready(state , action : PayloadAction<string>){
+            const id = action.payload
+            delete state.data.watchedAlready[id]
+        },
+            
     }
 })
 
@@ -104,10 +112,10 @@ export default myListSlice.reducer
 export const selectSearch = (state : RootState) => state.myList.search;
 
 
-export const selectTV = (state : RootState) => state.myList.data.tv.filter((item : any) => filterBySearch(item, state.myList.search));
+export const selectTV = (state : RootState) => Object.values(state.myList.data.tv).filter((item : any) => filterBySearch(item, state.myList.search));
 export const selectMovie = (state : RootState) => Object.values(state.myList.data.movie).filter((item ) => filterBySearch(item, state.myList.search));
 export const selectWatchedAlready = (state : RootState) => Object.values(state.myList.data.watchedAlready).filter((item : any) => filterBySearch(item, state.myList.search));
-export const selectAnime = (state : RootState) => state.myList.data.anime.filter((item : any) => filterBySearch(item, state.myList.search));
+export const selectAnime = (state : RootState) => Object.values(state.myList.data.anime).filter((item : any) => filterBySearch(item, state.myList.search));
 
 export const selectHistory = (state : RootState) => state.myList.data.history;
 export const selectHistoryByID = (id : string) => (state : RootState) => state.myList.data.history[id];
@@ -118,6 +126,7 @@ type hasType = 'tv' | 'movie' | 'anime'
 export const has = (type : hasType, id : string) => (state : RootState) => state.myList.data?.[type]?.[id] !== undefined;
 
 const filterBySearch = (item : any, query : string) => {
+    if(!query) return true;
     const name = item?.name?.toLowerCase() || item?.title?.userPreferred?.toLowerCase() || item?.title?.english?.toLowerCase() || item?.title?.romaji?.toLowerCase() || item?.title?.toLowerCase();
     return name.toLowerCase().includes(query.toLowerCase());
 }

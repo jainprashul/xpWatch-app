@@ -49,43 +49,6 @@ export const getEpisodeSources = async (sources : any ) => {
     return watchLinks;
 }
 
-export const testAnimeData = {
-    id: '1',
-    slug: 'not-found-111',
-    coverImage: '/no-image.png',
-    bannerImage: '/no-image.png',
-    title: {
-        romaji: 'Anime Name',
-        english: 'Anime Name',
-        native: 'Anime Name',
-        userPreferred: 'Anime Name'
-    },
-    description: 'This is the description of the anime',
-    season: 'WINTER',
-    currentEpisode: 1000,
-    duration: 24,
-    status: 'RELEASING',
-    genre: ['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Shounen'],
-    synonyms: ['One Piece', 'One Piece', 'ワンピース', 'One Piece'],
-    averageScore: 100,
-    popularity: 100,
-    episodes: [
-        {
-            id: '1',
-            number: 1,
-            title: 'Episode 1',
-            discription: 'The story follows the adventures of Monkey',
-            sources: [
-                {
-                    id: '1',
-                    target: '/'
-                }
-            ],
-            image: '/no-image.png',
-        }
-    ],
-}
-
 export const getTVData = async (id : string, seasonID = 1, episodeID = 1) => {
     try {
         console.log('tv', t(id));
@@ -131,10 +94,10 @@ export const getTVSeasonEpisodeSources = (id : string, seasonID = 1, episodeID =
     try {
         const watchLinks = [
             {
-                server : "FireSonic",
-                quality : 'HD',
-                title : 'Watch on FireSonic',
-                url : `https://firesonic.sc/serie.php?imdb=${imdb_id}&s=${seasonID}&e=${episodeID}`
+                server: "SuperEmbed",
+                quality: 'HD',
+                title: 'Watch on SuperEmbed',
+                url: `https://multiembed.mov/directstream.php?video_id=${imdb_id}&s=${seasonID}&e=${episodeID}`
             },
             {
                 server: "VidSrc",
@@ -148,6 +111,12 @@ export const getTVSeasonEpisodeSources = (id : string, seasonID = 1, episodeID =
                 title: 'Watch on 2embed',
                 url: `https://2embed.org/embed/series?tmdb=${id}&sea=${seasonID}&epi=${episodeID}`
             }, 
+            {
+                server : "FireSonic",
+                quality : 'HD',
+                title : 'Watch on FireSonic',
+                url : `https://firesonic.sc/serie.php?imdb=${imdb_id}&s=${seasonID}&e=${episodeID}`
+            },
         ]
 
         return watchLinks;
@@ -184,10 +153,10 @@ export type MovieX = Awaited<ReturnType<typeof getMovieData>>;
 export const getMovieSources =  (id : string, imdb_id : string) => {
     const watchLinks = [
         {
-            server : "FireSonic",
-            quality : 'HD',
-            title : 'Watch on FireSonic',
-            url : `https://firesonic.sc/movie.php?imdb=${imdb_id}`
+            server: "SuperEmbed",
+            quality: 'HD',
+            title: 'Watch on SuperEmbed',
+            url: `https://multiembed.mov/directstream.php?video_id=${imdb_id}`
         },
         {
             server: "VidSrc",
@@ -201,6 +170,12 @@ export const getMovieSources =  (id : string, imdb_id : string) => {
             title: 'Watch on 2embed',
             url: `https://2embed.org/embed/series?tmdb=${id}`
         }, 
+        {
+            server : "FireSonic",
+            quality : 'HD',
+            title : 'Watch on FireSonic',
+            url : `https://firesonic.sc/movie.php?imdb=${imdb_id}`
+        },
     ]
     return watchLinks;
 }

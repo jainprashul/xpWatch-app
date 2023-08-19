@@ -5,11 +5,13 @@ import homeSlice from "./context/homeSlice";
 import tvSlice from "./context/tvSlice";
 import myListSlice from "./context/myListSlice";
 import playerSlice from "./context/playerSlice";
+import animeSlice from "./context/animeSlice";
 
 
 const rootReducer = combineReducers({
  home : homeSlice,
  tv : tvSlice,
+ anime : animeSlice ,
  myList : myListSlice,
  player : playerSlice,
 })

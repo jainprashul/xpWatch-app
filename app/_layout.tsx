@@ -8,14 +8,15 @@ import Loading from '../components/Loading';
 import { theme } from '../style/theme';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAppStart } from '../components/useAppStart';
+import { StatusBar } from 'expo-status-bar';
 
 export default function Layout() {
   return (
     <>
-    <Provider store={store}>
-      <PersistGate loading={<Loading />} persistor={persistor} />
-      <AppLayout />
-    </Provider>
+      <Provider store={store}>
+        <PersistGate loading={<Loading />} persistor={persistor} />
+        <AppLayout />
+      </Provider>
     </>
   );
 }
@@ -25,19 +26,20 @@ function AppLayout() {
   useAppStart()
   return (
     <SafeAreaProvider>
-    <PaperProvider theme={theme}>
-       <Stack
-      screenOptions={{
-        headerStyle: {
-          backgroundColor:  theme.colors.primary,
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      }}
-    />
-    </PaperProvider>
+      <PaperProvider theme={theme}>
+        <StatusBar style="auto" />
+        <Stack
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: theme.colors.primary,
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+      </PaperProvider>
     </SafeAreaProvider>
   );
 }

@@ -16,20 +16,35 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#151515"
       },
-      "package": "com.jainprashul.xpwatch"
+      "package": "com.jainprashul.xpwatch",
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "b3005b54-c96a-48f4-b076-07c21bb6407f"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/b3005b54-c96a-48f4-b076-07c21bb6407f"
+    }
   }
 }

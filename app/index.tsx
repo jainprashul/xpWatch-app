@@ -9,6 +9,7 @@ import { Text } from 'react-native-paper';
 import { Media } from '../types/media'
 import Search from '../components/Search'
 import { MaterialIcons } from '@expo/vector-icons';
+import ContinueWatching from '../components/ContinueWatching'
 
 const logo = 'https://xpwatch.vercel.app/logo.png'
 
@@ -24,6 +25,7 @@ const Home = () => {
       }} />
       <View>
         <Search />
+        <ContinueWatching />
         <List data={all} />
         <List data={movies as Media[]} name='Movies' />
         <List data={tv as Media[]} name='TV Shows' />

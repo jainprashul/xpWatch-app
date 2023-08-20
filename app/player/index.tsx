@@ -87,12 +87,14 @@ function Video(
             mediaCapturePermissionGrantType='grant'
             onLoadEnd={() => {
                 setTimeout(() => {
-                    console.log('add to last watched')
-                    dispatch(myListActions.addToLastWatched({
+                    console.log('add to watch history')
+                    dispatch(myListActions.addWatchHistory({
                         ...data,
                         type,
+                        lastUpdated: Date.now(),
                     }))
-                }, 10000);
+                }, 5000);
+
             }}
             source={{
                 uri: src,

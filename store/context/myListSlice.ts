@@ -31,7 +31,7 @@ const initState : initState = {
         anime : {},
         history : {},
         watchHistory : {},
-        lastWatched : [],
+        lastWatched : {},
         watchedAlready : {}
     },
 }
@@ -51,10 +51,6 @@ const myListSlice = createSlice({
         }>){
             const { id , s , e } = action.payload
             state.data.history[id] = { s , e }
-        },
-        addToLastWatched(state, action : PayloadAction<any>){
-            const { id } = action.payload
-            state.data.lastWatched[id] = action.payload;
         },
         setData(state, action : PayloadAction<any>){
             state.data = action.payload
@@ -105,6 +101,16 @@ const myListSlice = createSlice({
             const id = action.payload
             delete state.data.watchedAlready[id]
         },
+
+        addWatchHistory(state , action : PayloadAction<any>){
+            const { id , slug } = action.payload
+            state.data.watchHistory[slug ?? id] = action.payload;
+            state.data.lastWatched[slug ?? id] = action.payload;
+        },
+        removeWatchHistory(state , action : PayloadAction<string>){
+            const id = action.payload
+            delete state.data.watchHistory[id]
+        },
             
     }
 })
@@ -122,7 +128,7 @@ export const selectAnime = (state : RootState) => Object.values(state.myList.dat
 
 export const selectHistory = (state : RootState) => state.myList.data.history;
 export const selectHistoryByID = (id : string) => (state : RootState) => state.myList.data.history[id];
-export const selectLastWatched = (state : RootState) => state.myList.data.lastWatched;
+export const selectRecents = (state : RootState) => Object.values(state.myList.data.lastWatched).sort((a, b) => b.lastUpdated - a.lastUpdated);
 export const selectWatchHistory = (state : RootState) => Object.values(state.myList.data.watchHistory).sort((a, b) => b.lastUpdated - a.lastUpdated);
 type hasType = 'tv' | 'movie' | 'anime' | 'watchedAlready';
 // @ts-ignore

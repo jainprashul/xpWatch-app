@@ -2,7 +2,7 @@ import { StyleSheet, View, Image } from 'react-native'
 import React from 'react'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { BottomNavigation, List, Searchbar, Text } from 'react-native-paper'
-import { myListActions, selectAnime, selectLastWatched, selectMovie, selectTV, selectWatchedAlready } from '../../store/context/myListSlice';
+import { myListActions, selectAnime, selectRecents, selectMovie, selectTV, selectWatchedAlready } from '../../store/context/myListSlice';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Stack, router } from 'expo-router';
 
@@ -172,7 +172,7 @@ function WatchedAlready() {
 }
 
 function Recents() {
-    const data = useAppSelector(selectLastWatched)
+    const data = useAppSelector(selectRecents)
 
     return (
         <ScrollView>

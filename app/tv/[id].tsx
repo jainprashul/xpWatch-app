@@ -25,6 +25,7 @@ const TvPage = () => {
 
     const history = useAppSelector(selectHistoryByID(id as string))
     const favorite = useAppSelector(has('tv', id as string))
+    const watched = useAppSelector(has('watchedAlready', id as string))
     
     useEffect(() => {
         if (history) {
@@ -38,8 +39,6 @@ const TvPage = () => {
 
     const season = useAppSelector(state => state.tv.season)
     const current = useAppSelector(state => state.tv.current)
-
-
 
     const [sources, setSources] = React.useState<TvShowsSrc>([])
 
@@ -90,6 +89,19 @@ const TvPage = () => {
     function RemoveFromFavorite() {
         if (result)
             dispatch(myListActions.removeTVShow(result.id.toString()))
+    }
+
+    function AddtoWatched() {
+        if(result)
+        dispatch(myListActions.addWatchedAlready({
+            ...result,
+            type : 'tv'
+        }))
+    }
+
+    function RemoveFromWatched() {
+        if(result)
+        dispatch(myListActions.removeWatchedAlready(result.id.toString()))
     }
 
     const SeasonBox = () => <>
@@ -152,6 +164,9 @@ const TvPage = () => {
                 <MaterialIcons name={favorite ? "favorite" : "favorite-border"} size={30} color={theme.colors.primary} onPress={() => {
                     favorite ? RemoveFromFavorite() : AddtoFavorite()
                 }} />
+                 <MaterialIcons name={watched ? "bookmarks" : "bookmark-border"} size={30} color={theme.colors.primary} onPress={()=>{
+                watched ? RemoveFromWatched() : AddtoWatched()
+            }} />
             </View>
 
             <Text variant='headlineMedium' >{result?.name}</Text>

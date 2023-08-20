@@ -22,6 +22,8 @@ const MoviePage = () => {
     const [sources, setSources] = React.useState([] as MovieSrc)
 
     const favorite = useAppSelector(has('movie', id as string))
+    const watched = useAppSelector(has('watchedAlready', id as string))
+
     const [loading, setLoading] = React.useState(true)
 
     function AddtoFavorite() {
@@ -32,6 +34,19 @@ const MoviePage = () => {
     function RemoveFromFavorite() {
         if(result)
         dispatch(myListActions.removeMovie(result.id.toString()))
+    }
+
+    function AddtoWatched() {
+        if(result)
+        dispatch(myListActions.addWatchedAlready({
+            ...result,
+            type : 'movie'
+        }))
+    }
+
+    function RemoveFromWatched() {
+        if(result)
+        dispatch(myListActions.removeWatchedAlready(result.id.toString()))
     }
 
     useEffect(() => {
@@ -77,6 +92,9 @@ const MoviePage = () => {
             </Button>
             <MaterialIcons name={favorite ? "favorite" : "favorite-border"} size={30} color={theme.colors.primary} onPress={()=>{
                 favorite ? RemoveFromFavorite() : AddtoFavorite()
+            }} />
+            <MaterialIcons name={watched ? "bookmarks" : "bookmark-border"} size={30} color={theme.colors.primary} onPress={()=>{
+                watched ? RemoveFromWatched() : AddtoWatched()
             }} />
             </View>
             <Text variant='headlineMedium' >{result?.title}</Text>

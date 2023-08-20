@@ -1,10 +1,11 @@
-import { View, Pressable } from 'react-native'
+import { View, Pressable, FlatList } from 'react-native'
 import React from 'react'
 import { Media } from '../../types/media'
 import { Card, Divider, Text } from 'react-native-paper'
 import { MaterialIcons } from '@expo/vector-icons';
 import { Anime } from '../../types/anime';
 import { router } from 'expo-router';
+import Loading from '../Loading';
 
 
 type Props = {
@@ -17,11 +18,14 @@ const List = ({ data, name }: Props) => {
         <>
             <Text variant='labelLarge'>{name ?? "Trending"}</Text>
             <Divider style={{ marginVertical: 6, }} bold />
-            <View style={{ flexDirection: 'row', marginVertical: 10, gap: 4, flexWrap: 'wrap' }}>
-                {data.map((movie) =>
-                    !isAnime(movie) ? <ItemView key={movie.id} item={movie as Media} /> : <AnimeItemView key={movie.id} item={movie as Anime} />
-                )}
-            </View>
+            <FlatList data={data} renderItem={({ item }) => {
+                return !isAnime(item) ? <ItemView item={item as Media} /> : <AnimeItemView item={item as Anime} />
+            }} 
+            keyExtractor={(item) => item.id.toString()} 
+            numColumns={2} 
+            ListEmptyComponent={() => <Loading />}
+            />
+
         </>
     )
 }
@@ -44,7 +48,7 @@ function ItemView({ item }: { item: Media }) {
     return (
         // Flat List Item
         <>
-            <Card style={{ margin: 2, width: "48%" }}>
+            <Card style={{ margin: 5, flex : 1 }}>
                 <Pressable onLongPress={(e) => {
                     console.log(item)
                 }} onPress={_onPress} >
@@ -77,12 +81,13 @@ function AnimeItemView({ item }: { item: Anime }) {
 
     return (
         <>
-            <Card style={{ margin: 2, width: "48%" }}>
+            <Card style={{ margin: 5, flex : 1 }}>
                 <Pressable onLongPress={(e) => {
                     console.log(item)
                 }} onPress={_onPress} >
                     <Card.Cover source={{ uri: coverImage ?? bannerImage }} />
                 </Pressable>
+
                 <Card.Content>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <View>

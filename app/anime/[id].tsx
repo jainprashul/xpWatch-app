@@ -1,11 +1,11 @@
-import { Dimensions, Image, ImageBackground, StyleSheet, View, FlatList } from 'react-native'
-import React, { useEffect, useMemo } from 'react'
+import { Dimensions, Image, ImageBackground, StyleSheet, View, FlatList, TouchableOpacity } from 'react-native'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import { theme } from '../../style/theme'
 import { AnimeX, getAnimeData, getEpisodeSources } from '../../utils/db'
 import Loading from '../../components/Loading'
-import { Button, Card, Chip, Divider, List, Surface, Text } from 'react-native-paper'
+import { ActivityIndicator, Button, Card, Chip, Divider, List, Surface, Text } from 'react-native-paper'
 import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -22,6 +22,9 @@ const AnimeDetail = () => {
 
     const favorite = useAppSelector(has('anime', id as string))
     const history = useAppSelector(selectHistoryByID(id as string))
+    const watched = useAppSelector(has('watchedAlready', id as string))
+
+    const [loading1, setLoading1] = React.useState(false)
 
     useEffect(() => {
         if (history) {
@@ -52,7 +55,7 @@ const AnimeDetail = () => {
         getAnimeData(id as string).then((res) => {
             setData(res)
             dispatch(animeActions.setEpisodeList(res.episodes ?? []))
-            
+
             setLoading(false)
         })
     }, [id])
@@ -69,8 +72,9 @@ const AnimeDetail = () => {
 
     const play = (sources: any[]) => {
         console.log("souces", sources)
+        setLoading1(true)
         getEpisodeSources(sources).then((res) => {
-            console.log(res)
+            setLoading1(false)
             router.push({
                 pathname: 'player',
                 params: {
@@ -90,6 +94,19 @@ const AnimeDetail = () => {
     function RemoveFromFavorite() {
         if (result)
             dispatch(myListActions.removeAnime(result.slug.toString()))
+    }
+
+    function AddtoWatched() {
+        if (result)
+            dispatch(myListActions.addWatchedAlready({
+                ...result,
+                type: 'anime'
+        }))
+    }
+
+    function RemoveFromWatched() {
+        if (result)
+            dispatch(myListActions.removeWatchedAlready(result.id.toString()))
     }
 
 
@@ -124,7 +141,6 @@ const AnimeDetail = () => {
 
         </View></>
 
-
     return (
         <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
             <Stack.Screen options={{
@@ -144,11 +160,15 @@ const AnimeDetail = () => {
                             play(source ?? [])
                         }} labelStyle={{
                             color: 'white'
-                        }} >
-                            Watch Now
+                        }}>
+                            <ActivityIndicator animating={loading1} color='white' />
+                            Watch Now - E{episode}
                         </Button>
                         <MaterialIcons name={favorite ? "favorite" : "favorite-border"} size={30} color={theme.colors.primary} onPress={() => {
                             favorite ? RemoveFromFavorite() : AddtoFavorite()
+                        }} />
+                        <MaterialIcons name={watched ? "bookmarks" : "bookmark-border"} size={30} color={theme.colors.primary} onPress={() => {
+                            watched ? RemoveFromWatched() : AddtoWatched()
                         }} />
                     </View>
 

@@ -97,6 +97,9 @@ const myListSlice = createSlice({
         addWatchedAlready(state , action : PayloadAction<any>){
             const { id , slug } = action.payload
             state.data.watchedAlready[slug ?? id] = action.payload;
+            delete state.data.anime[slug ?? id]
+            delete state.data.movie[slug ?? id]
+            delete state.data.tv[slug ?? id]
         },
         removeWatchedAlready(state , action : PayloadAction<string>){
             const id = action.payload
@@ -121,7 +124,7 @@ export const selectHistory = (state : RootState) => state.myList.data.history;
 export const selectHistoryByID = (id : string) => (state : RootState) => state.myList.data.history[id];
 export const selectLastWatched = (state : RootState) => state.myList.data.lastWatched;
 export const selectWatchHistory = (state : RootState) => Object.values(state.myList.data.watchHistory).sort((a, b) => b.lastUpdated - a.lastUpdated);
-type hasType = 'tv' | 'movie' | 'anime'
+type hasType = 'tv' | 'movie' | 'anime' | 'watchedAlready';
 // @ts-ignore
 export const has = (type : hasType, id : string) => (state : RootState) => state.myList.data?.[type]?.[id] !== undefined;
 

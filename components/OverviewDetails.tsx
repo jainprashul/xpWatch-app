@@ -36,7 +36,7 @@ const OverviewDetails = ({ result, cast, recommandations, similars , seasons}: P
                 data={cast}
                 renderItem={({ item }) => {
                     return <Card style={{ margin: 5, width: 180 }} onPress={() => {
-
+                        router.push('person/' + item.id)
                     }}>
                         <Card.Cover source={{ uri: `https://image.tmdb.org/t/p/w500${item.profile_path}` }} />
                         <Card.Content>

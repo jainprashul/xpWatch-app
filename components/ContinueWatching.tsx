@@ -21,7 +21,8 @@ const ContinueWatching = () => {
                     }}
                         onLongPress={() => {
                             // dispatch(removeFromMyList(item))
-                            dispatch(myListActions.removeWatchHistory(item))
+                            console.log('remove')
+                            dispatch(myListActions.removeWatchHistory(item.slug ?? item.id))
                         }}
                     >
                         <Card.Cover source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w500${item.poster_path}` }} />

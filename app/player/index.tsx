@@ -10,6 +10,7 @@ import { myListActions } from '../../store/context/myListSlice';
 import TV from './TV';
 import Anime from './Anime';
 import { useKeepAwake } from 'expo-keep-awake';
+import { RecommandationView } from '../../components/OverviewDetails';
 
 
 
@@ -18,9 +19,10 @@ const Player = () => {
 
     useKeepAwake();
     
-    const { sources, type, result } = useLocalSearchParams()
+    const { sources, type, result, recommandations } = useLocalSearchParams()
     const srcs = JSON.parse(sources as string)
     const data = JSON.parse(result as string)
+    const recommandationsData = JSON.parse(recommandations as string)
 
     const XView = ({ type }: { type: string }) => {
         switch (type) {
@@ -45,6 +47,9 @@ const Player = () => {
             }}>Reload</Button> */}
 
             <XView type={type as string} />
+            
+            <View style={{ height: 20 }} />
+            <RecommandationView result={recommandationsData} text='Recommandations' />
 
         </ScrollView>
     )

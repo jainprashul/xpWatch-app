@@ -149,6 +149,7 @@ const TvPage = () => {
                 type: 'tv',
                 sources: JSON.stringify(sources),
                 result: JSON.stringify(result),
+                recommandations: JSON.stringify(recommandations),
             }
         })
     }

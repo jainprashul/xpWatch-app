@@ -1,4 +1,4 @@
-import { Dimensions, Image, ImageBackground, StyleSheet, View, FlatList, TouchableOpacity } from 'react-native'
+import { Dimensions, Image, ImageBackground, StyleSheet, View, FlatList, TouchableOpacity, Share } from 'react-native'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Stack, useLocalSearchParams } from 'expo-router'
@@ -101,7 +101,7 @@ const AnimeDetail = () => {
             dispatch(myListActions.addWatchedAlready({
                 ...result,
                 type: 'anime'
-        }))
+            }))
     }
 
     function RemoveFromWatched() {
@@ -169,6 +169,14 @@ const AnimeDetail = () => {
                         }} />
                         <MaterialIcons name={watched ? "bookmarks" : "bookmark-border"} size={30} color={theme.colors.primary} onPress={() => {
                             watched ? RemoveFromWatched() : AddtoWatched()
+                        }} />
+                        <MaterialIcons name="share" size={30} color={theme.colors.primary} onPress={() => {
+                            Share.share({
+                                message: `Watch ${result?.title} on xpWatch /n https://xpwatch.vercel.app/anmex/${result?.slug}`
+                            }, {
+                                dialogTitle: `Share ${result?.title}`,
+                                subject: `Watch ${result?.title} on xpWatch`
+                            })
                         }} />
                     </View>
 

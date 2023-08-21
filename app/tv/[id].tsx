@@ -1,4 +1,4 @@
-import { StyleSheet, View, FlatList, Image, } from 'react-native'
+import { StyleSheet, View, FlatList, Image, Share, } from 'react-native'
 import React, { useEffect } from 'react'
 import { useLocalSearchParams } from 'expo-router'
 import { TvShowsSrc, TvShowsX, getTVData, getTVSeasonData, getTVSeasonEpisodeSources } from '../../utils/db'
@@ -166,8 +166,16 @@ const TvPage = () => {
                     favorite ? RemoveFromFavorite() : AddtoFavorite()
                 }} />
                  <MaterialIcons name={watched ? "bookmarks" : "bookmark-border"} size={30} color={theme.colors.primary} onPress={()=>{
-                watched ? RemoveFromWatched() : AddtoWatched()
+                watched ? RemoveFromWatched() : AddtoWatched() }} />
+              <MaterialIcons name="share" size={30} color={theme.colors.primary} onPress={()=>{
+                Share.share({
+                    message : `Watch ${result?.name} on xpWatch /n https://xpwatch.vercel.app/tv/${result?.id}`
+                }, {
+                    dialogTitle : `Share ${result?.name}`,
+                    subject : `Watch ${result?.name} on xpWatch`,
+                })
             }} />
+
             </View>
 
             <Text variant='headlineMedium' >{result?.name}</Text>

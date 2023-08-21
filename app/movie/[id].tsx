@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native'
+import { Share, StyleSheet, View } from 'react-native'
 import { Stack } from 'expo-router'
 import { Button,  Divider, Text } from 'react-native-paper'
 import React, { useEffect } from 'react'
@@ -96,6 +96,16 @@ const MoviePage = () => {
             <MaterialIcons name={watched ? "bookmarks" : "bookmark-border"} size={30} color={theme.colors.primary} onPress={()=>{
                 watched ? RemoveFromWatched() : AddtoWatched()
             }} />
+            {/* SHARE  */}
+            <MaterialIcons name="share" size={30} color={theme.colors.primary} onPress={()=>{
+                Share.share({
+                    message : `Watch ${result?.title} on xpWatch /n https://xpwatch.vercel.app/movie/${result?.id}`
+                }, {
+                    dialogTitle : `Share ${result?.title}`,
+                    subject : `Watch ${result?.title} on xpWatch`
+                })
+            }} />
+
             </View>
             <Text variant='headlineMedium' >{result?.title}</Text>
             <Text variant='bodyLarge' >{result?.tagline}</Text>

@@ -35,7 +35,7 @@ const Home = () => {
       <View>
         <Search />
         <ContinueWatching />
-        <List data={all} />
+        <List data={all} horizontal />
         <List data={movies as Media[]} name='Movies' />
         <List data={tv as Media[]} name='TV Shows' />
         <List data={anime} name='Anime' />

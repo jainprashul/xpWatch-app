@@ -11,9 +11,11 @@ import Loading from '../Loading';
 type Props = {
     data: Array<Media | Anime>
     name?: string
+    horizontal?: boolean
 }
 
-const List = ({ data, name }: Props) => {
+const List = ({ data, name, horizontal }: Props) => {
+    if (horizontal) return <HorizontalList data={data} name={name} />
     return (
         <>
             <Text variant='labelLarge'>{name ?? "Trending"}</Text>
@@ -22,7 +24,7 @@ const List = ({ data, name }: Props) => {
                 return !isAnime(item) ? <ItemView item={item as Media} /> : <AnimeItemView item={item as Anime} />
             }} 
             keyExtractor={(item) => item.id.toString()} 
-            numColumns={2} 
+            horizontal
             ListEmptyComponent={() => <Loading />}
             />
 
@@ -31,6 +33,19 @@ const List = ({ data, name }: Props) => {
 }
 
 export default List
+
+function HorizontalList({ data, name }: Props) {
+    if (data.length === 0) return null;
+    return (
+        <>
+            <Text variant='labelLarge'>{name ?? "Trending"}</Text>
+            <Divider style={{ marginVertical: 6, }} bold />
+            <FlatList data={data} renderItem={({ item }) => {
+                return !isAnime(item) ? <ItemView item={item as Media} /> : <AnimeItemView item={item as Anime} />
+            }} keyExtractor={(item) => item.id.toString()} horizontal />
+        </>
+    )
+}
 
 
 

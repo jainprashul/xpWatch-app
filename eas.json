@@ -6,9 +6,7 @@
   "build": {
     "development": {
       "distribution": "internal",
-      "android": {
-        "gradleCommand": ":app:assembleDebug"
-      },
+      "developmentClient": true,
       "ios": {
         "buildConfiguration": "Debug"
       },

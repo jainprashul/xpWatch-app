@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { tvActions } from '../../store/context/tvSlice'
 import { has, myListActions, selectHistoryByID } from '../../store/context/myListSlice'
 import { MaterialIcons } from '@expo/vector-icons';
+import analytics from '@react-native-firebase/analytics'
 
 
 const TvPage = () => {
@@ -51,6 +52,10 @@ const TvPage = () => {
         getTVData(id as string).then((res) => {
             setData(res)
             setLoading1(false)
+            analytics().logScreenView({
+                screen_name: res?.result.name ?? 'TV',
+                screen_class: 'TV'
+            })
         }).catch((err) => {
             console.log('tv ', err)
             setLoading1(false)
@@ -84,11 +89,21 @@ const TvPage = () => {
     function AddtoFavorite() {
         if (result)
             dispatch(myListActions.addTVShow(result))
+            analytics().logEvent('add_to_favorite', {
+                content_type: 'tv',
+                item_id: result?.id,
+                title : result?.name
+            });
     }
 
     function RemoveFromFavorite() {
         if (result)
             dispatch(myListActions.removeTVShow(result.id.toString()))
+            analytics().logEvent('remove_from_favorite', {
+                content_type: 'tv',
+                item_id: result?.id,
+                title : result?.name
+            });
     }
 
     function AddtoWatched() {
@@ -97,11 +112,21 @@ const TvPage = () => {
             ...result,
             type : 'tv'
         }))
+        analytics().logEvent('add_to_watched', {
+            content_type: 'tv',
+            item_id: result?.id,
+            title : result?.name
+        });
     }
 
     function RemoveFromWatched() {
         if(result)
         dispatch(myListActions.removeWatchedAlready(result.id.toString()))
+        analytics().logEvent('remove_from_watched', {
+            content_type: 'tv',
+            item_id: result?.id,
+            title : result?.name
+        });
     }
 
     const SeasonBox = () => <>

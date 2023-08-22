@@ -7,6 +7,7 @@ import { AnimeDetail } from '../../types/animeDetail'
 import { FlatList } from 'react-native-gesture-handler'
 import { animeActions } from '../../store/context/animeSlice'
 import { getEpisodeSources } from '../../utils/db'
+import analytics from '@react-native-firebase/analytics'
 
 type Props = {
     data: AnimeDetail
@@ -41,10 +42,15 @@ const Anime = ({ data, srcs }: Props) => {
                     return
                 }
                 dispatch(playerAction.setSrc(srcs[0].url))
+                analytics().logEvent('playing', {
+                    content_type: 'anime',
+                    item_id: data?.id,
+                    title: data?.title.english ?? data.title.userPreferred,
+                    episode: episode
+                });
             })()
         }
     }, [episode])
-
 
     return (
         <View>
@@ -88,10 +94,7 @@ const Anime = ({ data, srcs }: Props) => {
                         />
                     </List.Accordion>
                 </List.Section>
-
             </ScrollView>
-
-
         </View>
     )
 }

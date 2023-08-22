@@ -10,6 +10,7 @@ import { Media } from '../types/media'
 import Search from '../components/Search'
 import { MaterialIcons } from '@expo/vector-icons';
 import ContinueWatching from '../components/ContinueWatching'
+import analytics from '@react-native-firebase/analytics'
 
 const logo = 'https://xpwatch.vercel.app/logo.png'
 
@@ -17,6 +18,14 @@ const logo = 'https://xpwatch.vercel.app/logo.png'
 
 const Home = () => {
   const { all, movies, tv, anime } = useAppSelector(state => state.home.trending)
+
+  React.useEffect(() => {
+    analytics().logScreenView({
+      screen_name: 'Home',
+      screen_class: 'Home'
+    })
+  }, [])
+
   return (
     <ScrollView style={styles.container}>
       <Stack.Screen options={{

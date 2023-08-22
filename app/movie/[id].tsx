@@ -13,6 +13,7 @@ import Overview from '../../components/Overview'
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { has, myListActions } from '../../store/context/myListSlice'
+import analytics from '@react-native-firebase/analytics'
 
 const MoviePage = () => {
     const dispatch = useAppDispatch();
@@ -29,11 +30,21 @@ const MoviePage = () => {
     function AddtoFavorite() {
         if(result)
         dispatch(myListActions.addMovie(result))
+        analytics().logEvent('add_to_favorite', {
+            content_type: 'movie',
+            item_id: result?.id,
+            title : result?.title
+        });
     }
 
     function RemoveFromFavorite() {
         if(result)
         dispatch(myListActions.removeMovie(result.id.toString()))
+        analytics().logEvent('remove_from_favorite', {
+            content_type: 'movie',
+            item_id: result?.id,
+            title : result?.title
+        });
     }
 
     function AddtoWatched() {
@@ -42,11 +53,21 @@ const MoviePage = () => {
             ...result,
             type : 'movie'
         }))
+        analytics().logEvent('add_to_watched', {
+            content_type: 'movie',
+            item_id: result?.id,
+            title : result?.title
+        });
     }
 
     function RemoveFromWatched() {
         if(result)
         dispatch(myListActions.removeWatchedAlready(result.id.toString()))
+        analytics().logEvent('remove_from_watched', {
+            content_type: 'movie',
+            item_id: result?.id,
+            title : result?.title
+        });
     }
 
     useEffect(() => {
@@ -54,6 +75,10 @@ const MoviePage = () => {
         getMovieData(id as string).then((res) => {
             setMovieData(res)
             setLoading(false)
+            analytics().logScreenView({
+                screen_name: res.result?.title ?? 'Movie',
+                screen_class: 'Movie'
+            })
         })
     }, [id])
 
@@ -104,6 +129,11 @@ const MoviePage = () => {
                     dialogTitle : `Share ${result?.title}`,
                     subject : `Watch ${result?.title} on xpWatch`
                 })
+                analytics().logEvent('share', {
+                    content_type: 'movie',
+                    item_id: result?.id,
+                    title : result?.title
+                });
             }} />
 
             </View>

@@ -7,6 +7,7 @@ import { TVDetails } from '../../types/tvDetails'
 import { tvActions } from '../../store/context/tvSlice'
 import { getTVSeasonEpisodeSources } from '../../utils/db'
 import { myListActions } from '../../store/context/myListSlice'
+import analytics from '@react-native-firebase/analytics'
 
 type Props = {
     data: TVDetails
@@ -33,6 +34,13 @@ const TV = ({ data, srcs }: Props) => {
             }))
         }, 3000);
 
+        analytics().logEvent('playing', {
+            content_type: 'tv',
+            item_id: data?.id,
+            title: data?.name,
+            season : season,
+            episode : episode
+        });
     }, [season, episode])
 
     return (

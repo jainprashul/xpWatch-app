@@ -4,6 +4,7 @@ import { MovieDetail } from '../../types/movieDetail'
 import { SegmentedButtons, Text } from 'react-native-paper'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { playerAction } from '../../store/context/playerSlice'
+import analytics from '@react-native-firebase/analytics'
 
 type Props = {
     data: MovieDetail
@@ -16,6 +17,11 @@ const Movie = ({ data, srcs }: Props) => {
 
     useEffect(() => {
         dispatch(playerAction.setSrc(srcs[0].url))
+        analytics().logEvent('playing', {
+            content_type: 'movie',
+            item_id: data?.id,
+            title: data?.title
+        });
     }, [])
 
     return (

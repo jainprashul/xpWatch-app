@@ -8,6 +8,7 @@ import Loading from '../../components/Loading'
 import { ActivityIndicator, Button, Card, Chip, Divider, List, Surface, Text } from 'react-native-paper'
 import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
+import analytics from '@react-native-firebase/analytics';
 
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
@@ -57,6 +58,10 @@ const AnimeDetail = () => {
             dispatch(animeActions.setEpisodeList(res.episodes ?? []))
 
             setLoading(false)
+            analytics().logScreenView({
+                screen_name: res?.result.title.english ?? 'Anime',
+                screen_class: 'Anime'
+            });
         })
     }, [id])
 
@@ -89,11 +94,22 @@ const AnimeDetail = () => {
     function AddtoFavorite() {
         if (result)
             dispatch(myListActions.addAnime(result))
+            analytics().logEvent('add_to_favorite', {
+                content_type: 'anime',
+                item_id: result?.id,
+                title : result?.title
+            });
     }
 
     function RemoveFromFavorite() {
         if (result)
             dispatch(myListActions.removeAnime(result.slug.toString()))
+            analytics().logEvent('remove_from_favorite', {
+                content_type: 'anime',
+                item_id: result?.id,
+                title : result?.title
+            });
+
     }
 
     function AddtoWatched() {
@@ -102,17 +118,25 @@ const AnimeDetail = () => {
                 ...result,
                 type: 'anime'
             }))
+            analytics().logEvent('add_to_watched', {
+                content_type: 'anime',
+                item_id: result?.id,
+                title : result?.title
+            });
     }
 
     function RemoveFromWatched() {
         if (result)
             dispatch(myListActions.removeWatchedAlready(result.id.toString()))
+            analytics().logEvent('remove_from_watched', {
+                content_type: 'anime',
+                item_id: result?.id,
+                title : result?.title
+            });
     }
 
 
     const SeasonBox = () => <>
-
-
         <View style={{
             marginTop: 10,
         }}>

@@ -23,8 +23,8 @@ const List = ({ data, name, horizontal }: Props) => {
             <FlatList data={data} renderItem={({ item }) => {
                 return !isAnime(item) ? <ItemView item={item as Media} /> : <AnimeItemView item={item as Anime} />
             }} 
+            numColumns={2}
             keyExtractor={(item) => item.id.toString()} 
-            horizontal
             ListEmptyComponent={() => <Loading />}
             />
 
@@ -126,6 +126,6 @@ export function getYear(date: Date | undefined) {
     return new Date(date).getFullYear() ?? ''
 }
 
-function isAnime(item: Media | Anime): item is Anime {
+export function isAnime(item: Media | Anime): item is Anime {
     return (item as Anime).slug !== undefined;
 }

@@ -88,7 +88,7 @@ const Anime = ({ data, srcs }: Props) => {
                                     dispatch(animeActions.setEpisode(v.number))
 
                                 }}
-                                left={props => <Image {...props} source={{ uri: v.image }} style={{ width: 80, height: 100, borderRadius: 10, marginVertical: 10 }} />}
+                                left={props => <Image {...props} source={{ uri: v.image ?? '' }} style={{ width: 80, height: 100, borderRadius: 10, marginVertical: 10 }} />}
                             />)}
                             keyExtractor={item => item.id.toString()}
                         />

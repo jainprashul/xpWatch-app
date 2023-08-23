@@ -10,7 +10,6 @@ export const movie = {
     discover: (page: number) => `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}&region=IN&page=${page}`,
     genres: `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}&region=IN`,
     credits: (id: any) => `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}&region=IN`,
-    hindi : (page : number) => `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}&with_original_language=hi&page=${page}&region=IN&sort_by=popularity.desc`,
 }
 
 export const anime = {
@@ -34,7 +33,12 @@ export const tv = {
     genres: `https://api.themoviedb.org/3/genre/tv/list?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}`,
     season: (id: string, season: number) => `https://api.themoviedb.org/3/tv/${id}/season/${season}?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}`,
     credits: (id: any) => `https://api.themoviedb.org/3/tv/${id}/credits?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}`,
-    hindi : (page : number) => `https://api.themoviedb.org/3/discover/tv?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}&with_original_language=hi&page=${page}&region=IN&sort_by=popularity.desc`,
+}
+
+export const hindi = {
+    movie: (page: number) => `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}&with_original_language=hi&page=${page}&region=IN&sort_by=popularity.desc`,
+    recentMovie: (page: number) => `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}&with_original_language=hi&page=${page}&region=IN&sort_by=popularity.desc&primary_release_year=${new Date().getFullYear()}`,
+    tv: (page: number) => `https://api.themoviedb.org/3/discover/tv?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}&with_original_language=hi&page=${page}&region=IN&sort_by=popularity.desc`,
 }
 
 export const genre = {
@@ -50,6 +54,11 @@ export const discover = {
 }
 
 export const trending = {
+    today : {
+        movies: `https://api.themoviedb.org/3/trending/movie/day?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}`,
+        tv: `https://api.themoviedb.org/3/trending/tv/day?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}`,
+        all: `https://api.themoviedb.org/3/trending/all/day?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}`,
+    },
     movies: `https://api.themoviedb.org/3/trending/movie/week?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}`,
     tv: `https://api.themoviedb.org/3/trending/tv/week?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}`,
     all: `https://api.themoviedb.org/3/trending/all/week?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}`,

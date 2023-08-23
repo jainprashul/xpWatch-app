@@ -1,5 +1,5 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { animeX, trending } from "../../utils/constants";
+import { animeX, hindi, trending } from "../../utils/constants";
 import { Media } from "../../types/media";
 import { TV } from "../../types/tv";
 import { Movie } from "../../types/movie";
@@ -13,6 +13,7 @@ type initState = {
         tv: Array<TV>;
         all: Array<Media>;
         anime: Array<Anime>;
+        bollywood: Array<Movie>;
     },
     discover: {
         movies: Array<Movie>;
@@ -20,6 +21,7 @@ type initState = {
         all: Array<Media>;
         anime: Array<Anime>;
     },
+    lastRefreshed: number;
 }
 
 const initialState: initState = {
@@ -30,6 +32,7 @@ const initialState: initState = {
         tv: [],
         all: [],
         anime: [],
+        bollywood: [],
     },
     discover: {
         movies: [],
@@ -37,16 +40,18 @@ const initialState: initState = {
         all: [],
         anime: [],
     },
-    
+    lastRefreshed: 0,
+
 };
 
 export const fetchTrending = createAsyncThunk("home/fetchTrending", async () => {
     try {
         const all = fetch(trending.all);
-        const movies = fetch(trending.movies);
-        const tv = fetch(trending.tv);
+        const movies = fetch(trending.today.movies);
+        const tv = fetch(trending.today.tv);
         const anime = fetch(animeX.popular(1));
-        const data = await Promise.all([all, movies, tv, anime]);
+        const bollywood = fetch(hindi.recentMovie(1));
+        const data = await Promise.all([all, movies, tv, anime, bollywood]);
 
         const res = await Promise.all(data.map((res) => res.json()));
         return {
@@ -54,6 +59,7 @@ export const fetchTrending = createAsyncThunk("home/fetchTrending", async () => 
             movies: res[1].results,
             tv: res[2].results,
             anime: res[3].data,
+            bollywood: res[4].results.map((movie: any) => ({ ...movie, media_type: "movie" })),
         }
     } catch (error) {
         console.log(error);
@@ -68,10 +74,14 @@ export const homeSlice = createSlice({
         setName: (state, action: PayloadAction<string>) => {
             state.name = action.payload;
         },
+        setLastRefreshed: (state, action: PayloadAction<number>) => {
+            state.lastRefreshed = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchTrending.fulfilled, (state, action) => {
             state.trending = action.payload;
+            state.lastRefreshed = Date.now();
         });
         builder.addCase(fetchTrending.rejected, (state, action) => {
             console.log(action.error);

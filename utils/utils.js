@@ -43,3 +43,8 @@ export const debouncePromise = (fn, ms = 0) => {
         pending.push({ resolve: res, reject: rej });
       });
   };
+
+  export function generateRandomColor(opacity=1){
+    return `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 
+    ${Math.floor(Math.random() * 256)}, ${opacity})`;
+  }

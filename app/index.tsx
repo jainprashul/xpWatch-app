@@ -1,32 +1,35 @@
-import { StyleSheet, View, RefreshControl } from 'react-native'
+import { StyleSheet, View, RefreshControl, Pressable } from 'react-native'
 import React from 'react'
 import { Stack, router } from 'expo-router'
 import { theme } from '../style/theme'
 import { Image, ScrollView, ToastAndroid } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import List from '../components/Shared/List'
-import { Text } from 'react-native-paper';
+import { Chip, Text } from 'react-native-paper';
 import { Media } from '../types/media'
 import Search from '../components/Search'
 import { MaterialIcons } from '@expo/vector-icons';
 import ContinueWatching from '../components/ContinueWatching'
 import analytics from '@react-native-firebase/analytics'
-import { fetchTrending } from '../store/context/homeSlice'
+import { fetchGenre, fetchTrending } from '../store/context/homeSlice'
+import { FlatList } from 'react-native-gesture-handler'
+import { generateRandomColor } from '../utils/utils'
 
 const logo = 'https://xpwatch.vercel.app/logo.png'
-
-
 
 const Home = () => {
   const dispatch = useAppDispatch()
   const { all, movies, tv, anime, bollywood } = useAppSelector(state => state.home.trending)
   const [refreshing, setRefreshing] = React.useState(false);
 
-  function onRefresh() {
+  async function onRefresh() {
     setRefreshing(true);
     try {
-      dispatch(fetchTrending())
-      ToastAndroid.show('Refresh Done', ToastAndroid.SHORT)
+      await dispatch(fetchGenre())
+      const res = await dispatch(fetchTrending())
+      if (res.meta.requestStatus === 'fulfilled') {
+        ToastAndroid.show('Refreshed', ToastAndroid.SHORT)
+      }
     } catch (error) {
       console.log(error)
       ToastAndroid.show('Something went wrong', ToastAndroid.SHORT)
@@ -59,6 +62,7 @@ const Home = () => {
         <List data={(bollywood ?? []) as Media[]} name='Bollywood' horizontal />
         <List data={anime} name='Anime' horizontal />
       </View>
+        <GenreList />
     </ScrollView>
   )
 }
@@ -71,6 +75,11 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
     padding: 10
   },
+  genreChip: {
+    margin: 5,
+    backgroundColor: theme.colors.primary,
+    borderRadius: 15
+  }
 })
 
 
@@ -91,4 +100,27 @@ export function Header() {
       </View>
     </View>
   );
+}
+
+function GenreList () {
+  const genrelist = useAppSelector(state => state.home.genre)
+  return (
+    <View>
+      <Text>Genre</Text>
+      <FlatList data={genrelist} numColumns={4} renderItem={({item}) => (
+        <Chip onPress={()=> {
+          router.push({
+            pathname: 'genre',
+            params: {
+              id: item.id,
+              name: item.name
+            }
+          })
+        }} style={{
+          ...styles.genreChip, backgroundColor: generateRandomColor(0.7)
+        }} textStyle={{color: 'white'}}>{item.name}</Chip>
+      )} />
+      
+    </View>
+  )
 }

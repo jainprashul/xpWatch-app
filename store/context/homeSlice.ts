@@ -1,5 +1,5 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { animeX, hindi, trending } from "../../utils/constants";
+import { animeX, genre, hindi, trending } from "../../utils/constants";
 import { Media } from "../../types/media";
 import { TV } from "../../types/tv";
 import { Movie } from "../../types/movie";
@@ -22,6 +22,10 @@ type initState = {
         anime: Array<Anime>;
     },
     lastRefreshed: number;
+    genre : {
+        id : number;
+        name : string;
+    }[];
 }
 
 const initialState: initState = {
@@ -41,7 +45,7 @@ const initialState: initState = {
         anime: [],
     },
     lastRefreshed: 0,
-
+    genre : [],
 };
 
 export const fetchTrending = createAsyncThunk("home/fetchTrending", async () => {
@@ -67,6 +71,17 @@ export const fetchTrending = createAsyncThunk("home/fetchTrending", async () => 
     }
 });
 
+export const fetchGenre = createAsyncThunk("home/fetchGenre", async () => {
+    try {
+        const res = await fetch(genre.list);
+        const data = await res.json();
+        return data.genres;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+});
+
 export const homeSlice = createSlice({
     name: "home",
     initialState,
@@ -85,6 +100,9 @@ export const homeSlice = createSlice({
         });
         builder.addCase(fetchTrending.rejected, (state, action) => {
             console.log(action.error);
+        });
+        builder.addCase(fetchGenre.fulfilled, (state, action) => {
+            state.genre = action.payload;
         });
     },
 });

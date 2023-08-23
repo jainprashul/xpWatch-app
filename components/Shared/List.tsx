@@ -15,6 +15,7 @@ type Props = {
 }
 
 const List = ({ data, name, horizontal }: Props) => {
+    if (data.length === 0) return null;
     if (horizontal) return <HorizontalList data={data} name={name} />
     return (
         <>

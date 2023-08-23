@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "903583112461",
+    "firebase_url": "https://xpwatch0-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "xpwatch0",
+    "storage_bucket": "xpwatch0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903583112461:android:6edee34820d6811605e444",
+        "android_client_info": {
+          "package_name": "com.jainprashul.xpwatch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "903583112461-h6pb3lujde3psukk8b2q879a6crdv2u6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jainprashul.xpwatch",
+            "certificate_hash": "a59464c9090212734a10658d232cbfec4305c6bf"
+          }
+        },
+        {
+          "client_id": "903583112461-phu0gk3ub2qnnbjacdoj3pnogh11hjtb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt0Kk5wtVihye0LPBUeaVWHf6FheqRPjQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "903583112461-phu0gk3ub2qnnbjacdoj3pnogh11hjtb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

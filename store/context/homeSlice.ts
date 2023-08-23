@@ -13,7 +13,13 @@ type initState = {
         tv: Array<TV>;
         all: Array<Media>;
         anime: Array<Anime>;
-    }
+    },
+    discover: {
+        movies: Array<Movie>;
+        tv: Array<TV>;
+        all: Array<Media>;
+        anime: Array<Anime>;
+    },
 }
 
 const initialState: initState = {
@@ -24,7 +30,14 @@ const initialState: initState = {
         tv: [],
         all: [],
         anime: [],
-    }
+    },
+    discover: {
+        movies: [],
+        tv: [],
+        all: [],
+        anime: [],
+    },
+    
 };
 
 export const fetchTrending = createAsyncThunk("home/fetchTrending", async () => {

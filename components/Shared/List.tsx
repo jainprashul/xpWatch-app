@@ -63,7 +63,7 @@ function ItemView({ item }: { item: Media }) {
     return (
         // Flat List Item
         <>
-            <Card style={{ margin: 5, flex : 1 }}>
+            <Card style={{ margin: 5, flex : 1, width : 180 }}>
                 <Pressable onLongPress={(e) => {
                     console.log(item)
                 }} onPress={_onPress} >
@@ -96,7 +96,7 @@ function AnimeItemView({ item }: { item: Anime }) {
 
     return (
         <>
-            <Card style={{ margin: 5, flex : 1 }}>
+            <Card style={{ margin: 5, flex : 1, width : 180 }}>
                 <Pressable onLongPress={(e) => {
                     console.log(item)
                 }} onPress={_onPress} >

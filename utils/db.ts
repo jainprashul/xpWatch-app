@@ -94,11 +94,23 @@ export const getTVSeasonEpisodeSources = (id : string, seasonID = 1, episodeID =
     try {
         const watchLinks = [
             {
-                server: "SuperEmbed",
+                server: "AlphaX",
                 quality: 'HD',
-                title: 'Watch on SuperEmbed',
+                title: 'Watch on AlphaX',
+                url : `https://vidsrc.to/embed/tv/${imdb_id}/${seasonID}/${episodeID}`
+            },
+            {
+                server : "BetaX",
+                quality : 'HD',
+                title : 'Watch on BetaX',
                 url: `https://multiembed.mov/directstream.php?video_id=${imdb_id}&s=${seasonID}&e=${episodeID}`
             },
+            {
+                server: "GammaX",
+                quality: 'HD',
+                title: 'Watch on GammaX',
+                url: `https://vidsrc.me/embed/tv?imdb=${imdb_id}&season=${seasonID}&episode=${episodeID}`
+            }, 
             {
                 server: "VidSrc",
                 quality: 'HD',
@@ -111,12 +123,6 @@ export const getTVSeasonEpisodeSources = (id : string, seasonID = 1, episodeID =
                 title: 'Watch on 2embed',
                 url: `https://2embed.org/embed/series?tmdb=${id}&sea=${seasonID}&epi=${episodeID}`
             }, 
-            {
-                server : "FireSonic",
-                quality : 'HD',
-                title : 'Watch on FireSonic',
-                url : `https://firesonic.sc/serie.php?imdb=${imdb_id}&s=${seasonID}&e=${episodeID}`
-            },
         ]
 
         return watchLinks;
@@ -153,10 +159,22 @@ export type MovieX = Awaited<ReturnType<typeof getMovieData>>;
 export const getMovieSources =  (id : string, imdb_id : string) => {
     const watchLinks = [
         {
-            server: "SuperEmbed",
+            server: "AlphaX",
             quality: 'HD',
-            title: 'Watch on SuperEmbed',
+            title: 'Watch on AlphaX',
+            url : `https://vidsrc.to/embed/movie/${imdb_id}`
+        },
+        {
+            server : "BetaX",
+            quality : 'HD',
+            title : 'Watch on BetaX',
             url: `https://multiembed.mov/directstream.php?video_id=${imdb_id}`
+        },
+        {
+            server: "GammaX",
+            quality: 'HD',
+            title: 'Watch on GammaX',
+            url: `https://vidsrc.me/embed/movie?imdb=${imdb_id}`
         },
         {
             server: "VidSrc",
@@ -170,12 +188,6 @@ export const getMovieSources =  (id : string, imdb_id : string) => {
             title: 'Watch on 2embed',
             url: `https://2embed.org/embed/series?tmdb=${id}`
         }, 
-        {
-            server : "FireSonic",
-            quality : 'HD',
-            title : 'Watch on FireSonic',
-            url : `https://firesonic.sc/movie.php?imdb=${imdb_id}`
-        },
     ]
     return watchLinks;
 }

@@ -8,6 +8,7 @@ const Search = () => {
     const onChangeSearch = (query: string) => setSearchQuery(query);
     function onSubmitEditing() {
         console.log('Submitted', searchQuery)
+        if (searchQuery.trim().length < 3) return null
         router.push({
             pathname: 'search',
             params: {
@@ -19,7 +20,8 @@ const Search = () => {
     return (
         <View style={{ marginVertical: 10 }}>
             <Searchbar
-                placeholder="Search for Movies, TV Shows, Anime..."
+                style={{ borderRadius: 30 }}
+                placeholder="Search for Movies, TV Shows, Anime ..."
                 onChangeText={onChangeSearch}
                 onSubmitEditing={onSubmitEditing}
                 value={searchQuery}

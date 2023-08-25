@@ -7,9 +7,11 @@ import { Anime, AnimeRes } from '../../types/anime'
 import { groupBy } from '../../utils/utils'
 import { SegmentedButtons, Text, List, Button } from 'react-native-paper'
 import { theme } from '../../style/theme'
+import Loading from '../../components/Loading'
 
 const Search = () => {
 
+  const [loading , setLoading] = React.useState(false)
   const { query } = useLocalSearchParams()
   const [page, setPage] = React.useState(1)
   const [select, setSelect] = React.useState("all")
@@ -27,14 +29,28 @@ const Search = () => {
     const q = query?.toString().trim();
     if (q) {
       console.log('Searching for', q)
+      setLoading(true)
       fetchSearch(q, page).then((res) => {
         setData(res)
-      }
-      )
+      }).catch((err) => {
+        console.log(err)
+      }).finally(() => {
+        setLoading(false)
+      })
     }
   }, [query , page])
 
   const currentData = data[select as keyof typeof data] as any[]
+
+  if (loading) {
+    return <>
+        <Stack.Screen options={{
+            headerShown: false
+        }} />
+        <Loading />
+    </>
+}
+
 
   return (
     <ScrollView style={styles.container}>
@@ -98,7 +114,7 @@ function SearchList({ data }: SProps) {
               description={item.overview ?? item.description}
               left={props => <Image {...props} source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 50 }} />}
               onPress={() => {
-                router.push(item.media_type + '/' + item.slug ?? item.id)
+                router.push(item.media_type + '/' + (item.slug ?? item.id))
               }}
             />
           )}

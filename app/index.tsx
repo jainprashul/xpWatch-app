@@ -57,8 +57,8 @@ const Home = () => {
         <Search />
         <ContinueWatching />
         <List data={all} horizontal />
-        <List data={movies as Media[]} name='Movies' horizontal />
-        <List data={tv as Media[]} name='TV Shows' horizontal />
+        <List data={movies as Media[]} name='Movies' horizontal link='/movie' />
+        <List data={tv as Media[]} name='TV Shows' horizontal link='/tv' />
         <List data={(bollywood ?? []) as Media[]} name='Bollywood' horizontal />
         <List data={anime} name='Anime' horizontal />
       </View>
@@ -105,7 +105,10 @@ export function Header() {
 function GenreList () {
   const genrelist = useAppSelector(state => state.home.genre)
   return (
-    <View>
+    <View style={{
+      flex: 1,
+      marginVertical: 10,
+    }}>
       <Text>Genre</Text>
       <FlatList data={genrelist} numColumns={4} renderItem={({item}) => (
         <Chip onPress={()=> {

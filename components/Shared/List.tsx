@@ -6,27 +6,42 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Anime } from '../../types/anime';
 import { router } from 'expo-router';
 import Loading from '../Loading';
+import { theme } from '../../style/theme';
 
 
 type Props = {
     data: Array<Media | Anime>
     name?: string
     horizontal?: boolean
+    link?: string
 }
 
-const List = ({ data, name, horizontal }: Props) => {
+const List = ({ data, name, horizontal, link }: Props) => {
     if (data.length === 0) return null;
-    if (horizontal) return <HorizontalList data={data} name={name} />
+    if (horizontal) return <HorizontalList data={data} name={name} link={link} />
     return (
         <>
-            <Text variant='labelLarge'>{name ?? "Trending"}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text style={{
+                    marginTop: 6,
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    fontStyle: 'italic',
+                    fontVariant: ['small-caps']
+                }} >{name ?? "Trending"}</Text>
+                {
+                    link ? <Pressable onPress={() => router.push(link)}>
+                        <Text style={{ color: theme.colors.primary }}>See All</Text>
+                    </Pressable> : null
+                }
+            </View>
             <Divider style={{ marginVertical: 6, }} bold />
             <FlatList data={data} renderItem={({ item }) => {
                 return !isAnime(item) ? <ItemView item={item as Media} /> : <AnimeItemView item={item as Anime} />
-            }} 
-            numColumns={2}
-            keyExtractor={(item) => item.id.toString()} 
-            ListEmptyComponent={() => <Loading />}
+            }}
+                numColumns={2}
+                keyExtractor={(item) => item.id.toString()}
+                ListEmptyComponent={() => <Loading />}
             />
 
         </>
@@ -35,11 +50,24 @@ const List = ({ data, name, horizontal }: Props) => {
 
 export default List
 
-function HorizontalList({ data, name }: Props) {
+function HorizontalList({ data, name, link }: Props) {
     if (data.length === 0) return null;
     return (
         <>
-            <Text variant='labelLarge'>{name ?? "Trending"}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text style={{
+                    marginTop: 6,
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    fontStyle: 'italic',
+                    fontVariant: ['small-caps']
+                }} >{name ?? "Trending"}</Text>
+                {
+                    link ? <Pressable onPress={() => router.push(link)}>
+                        <Text style={{ color: theme.colors.primary }}>See All</Text>
+                    </Pressable> : null
+                }
+            </View>
             <Divider style={{ marginVertical: 6, }} bold />
             <FlatList data={data} renderItem={({ item }) => {
                 return !isAnime(item) ? <ItemView item={item as Media} /> : <AnimeItemView item={item as Anime} />
@@ -64,7 +92,7 @@ function ItemView({ item }: { item: Media }) {
     return (
         // Flat List Item
         <>
-            <Card style={{ margin: 5, flex : 1, width : 180 }}>
+            <Card style={{ margin: 5, flex: 1, width: 180 }}>
                 <Pressable onLongPress={(e) => {
                     console.log(item)
                 }} onPress={_onPress} >
@@ -97,7 +125,7 @@ function AnimeItemView({ item }: { item: Anime }) {
 
     return (
         <>
-            <Card style={{ margin: 5, flex : 1, width : 180 }}>
+            <Card style={{ margin: 5, flex: 1, width: 180 }}>
                 <Pressable onLongPress={(e) => {
                     console.log(item)
                 }} onPress={_onPress} >

@@ -1,7 +1,7 @@
 import { StyleSheet, ScrollView, View, FlatList, Image } from 'react-native'
 import React from 'react'
 import { useLocalSearchParams, Stack, router } from 'expo-router'
-import { animeX, search } from '../../utils/constants'
+import { animeX, search, t } from '../../utils/constants'
 import { Media, Result } from '../../types/media'
 import { Anime, AnimeRes } from '../../types/anime'
 import { groupBy } from '../../utils/utils'
@@ -11,7 +11,7 @@ import Loading from '../../components/Loading'
 
 const Search = () => {
 
-  const [loading , setLoading] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
   const { query } = useLocalSearchParams()
   const [page, setPage] = React.useState(1)
   const [select, setSelect] = React.useState("all")
@@ -38,23 +38,24 @@ const Search = () => {
         setLoading(false)
       })
     }
-  }, [query , page])
+  }, [query, page])
 
   const currentData = data[select as keyof typeof data] as any[]
 
   if (loading) {
     return <>
-        <Stack.Screen options={{
-            headerShown: false
-        }} />
-        <Loading />
+      <Stack.Screen options={{
+        headerShown: false
+      }} />
+      <Loading />
     </>
-}
+  }
 
 
   return (
     <ScrollView style={styles.container}>
       <Stack.Screen options={{
+        headerShown: true,
         title: `Search - ${query}`,
       }} />
 
@@ -70,15 +71,15 @@ const Search = () => {
         })}
       />
 
-      <SearchList data={currentData}  />
+      <SearchList data={currentData} />
 
       {
         currentData?.length > 0 && <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Button disabled={page === 1} onPress={() => setPage(page - 1)}>Previous</Button>
-        <Button disabled={page === data.pages} onPress={() => setPage(page + 1)}>Next</Button>
-      </View>
+          <Button disabled={page === 1} onPress={() => setPage(page - 1)}>Previous</Button>
+          <Button disabled={page === data.pages} onPress={() => setPage(page + 1)}>Next</Button>
+        </View>
       }
-      
+
 
 
 
@@ -110,7 +111,7 @@ function SearchList({ data }: SProps) {
           renderItem={({ item }) => (
             <List.Item style={{ paddingHorizontal: 10 }}
               key={item.id}
-              title={ item.title?.userPreferred ?? item.title?.english ?? item.title ?? item.name}
+              title={item.title?.userPreferred ?? item.title?.english ?? item.title ?? item.name}
               description={item.overview ?? item.description}
               left={props => <Image {...props} source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 50 }} />}
               onPress={() => {
@@ -142,7 +143,7 @@ async function fetchSearch(query: string, page: number = 1) {
     anime,
     all: [...tmdbData.results, ...anime],
     total: tmdbData.total_results + animexData.meta.total,
-    show : tmdbData.results.length + animexData.data.length,
+    show: tmdbData.results.length + animexData.data.length,
     pages: Math.max(tmdbData.total_pages, animexData.meta.lastPage)
   }
 }

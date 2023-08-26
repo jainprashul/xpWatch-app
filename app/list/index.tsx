@@ -74,7 +74,7 @@ function MovieList() {
                             key={item.id}
                             title={item.title}
                             description={item.overview}
-                            left={props => <Image {...props} source={{ uri: `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 50 }} />}
+                            left={props => <Image {...props} source={{ uri: `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
                             onPress={() => {
                                 router.push('movie/' + item.id)
                             }}
@@ -101,7 +101,7 @@ function TvList() {
                             key={item.id}
                             title={item.name}
                             description={item.overview}
-                            left={props => <Image {...props} source={{ uri: `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 50 }} />}
+                            left={props => <Image {...props} source={{ uri: `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
                             //   right={props => <List.Icon {...props} icon="dots-vertical" />}
                             onPress={() => {
                                 router.push('tv/' + item.id)
@@ -130,7 +130,7 @@ function AnimeList() {
                             key={item.id}
                             title={item.title.english ?? item.title.userPreferred}
                             description={item.description}
-                            left={props => <Image {...props} source={{ uri: `${item.coverImage}` }} style={{ width: 50, height: 50 }} />}
+                            left={props => <Image {...props} source={{ uri: `${item.coverImage}` }} style={{ width: 50, height: 75 }} />}
                             //   right={props => <List.Icon {...props} icon="dots-vertical" />}
                             onPress={() => {
                                 router.push('anime/' + item.id)
@@ -158,7 +158,7 @@ function WatchedAlready() {
                             key={item.id}
                             title={item.title?.english ?? item.title ?? item.name}
                             description={item.overview ?? item.description}
-                            left={props => <Image {...props} source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 50 }} />}
+                            left={props => <Image {...props} source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
                             //   right={props => <List.Icon {...props} icon="dots-vertical" />}
                             onPress={() => {
                                 router.push(item.type + '/' + item.id)
@@ -186,7 +186,7 @@ function Recents() {
                             key={item.id}
                             title={item.title?.english ?? item.title ?? item.name}
                             description={item.overview ?? item.description}
-                            left={props => <Image {...props} source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 50 }} />}
+                            left={props => <Image {...props} source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
                             //   right={props => <List.Icon {...props} icon="dots-vertical" />}
                             onPress={() => {
                                 router.push(item.type + '/' + item.id)

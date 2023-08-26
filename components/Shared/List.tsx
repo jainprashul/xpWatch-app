@@ -1,4 +1,4 @@
-import { View, Pressable, FlatList } from 'react-native'
+import { View, Pressable, FlatList, StyleSheet } from 'react-native'
 import React from 'react'
 import { Media } from '../../types/media'
 import { Card, Divider, Text } from 'react-native-paper'
@@ -7,6 +7,13 @@ import { Anime } from '../../types/anime';
 import { router } from 'expo-router';
 import Loading from '../Loading';
 import { theme } from '../../style/theme';
+
+export const styles = StyleSheet.create({
+    poster : {
+        aspectRatio: 2/3,
+        height: 270,
+    }
+})
 
 
 type Props = {
@@ -96,7 +103,7 @@ function ItemView({ item }: { item: Media }) {
                 <Pressable onLongPress={(e) => {
                     console.log(item)
                 }} onPress={_onPress} >
-                    <Card.Cover source={{ uri: `https://image.tmdb.org/t/p/w342${poster_path}` }} />
+                    <Card.Cover style={styles.poster} source={{ uri: `https://image.tmdb.org/t/p/w342${poster_path}` }} />
                 </Pressable>
                 <Card.Content>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -129,7 +136,7 @@ function AnimeItemView({ item }: { item: Anime }) {
                 <Pressable onLongPress={(e) => {
                     console.log(item)
                 }} onPress={_onPress} >
-                    <Card.Cover source={{ uri: coverImage ?? bannerImage }} />
+                    <Card.Cover style={styles.poster} source={{ uri: coverImage ?? bannerImage }} />
                 </Pressable>
 
                 <Card.Content>

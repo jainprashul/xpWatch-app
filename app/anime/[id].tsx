@@ -237,7 +237,7 @@ const AnimeDetail = () => {
                         return <Card style={{ margin: 5, width: 180, }} onPress={() => {
                             router.push('anime/' + movie.id)
                         }} >
-                            <Card.Cover source={{ uri: movie.coverImage }} />
+                            <Card.Cover  style={styles.poster} source={{ uri: movie.coverImage }} />
                             <Card.Content>
                                 <Text variant='bodySmall' >{movie.title.english ?? movie.title.userPreferred}</Text>
                                 <Text variant='bodySmall' >{movie.type}</Text>
@@ -261,4 +261,8 @@ const styles = StyleSheet.create({
         backgroundColor: theme.colors.primary,
         marginBottom: 20,
     },
+    poster: {
+        height: 270,
+        aspectRatio: 2 / 3,
+    }
 })

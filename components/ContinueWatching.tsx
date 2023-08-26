@@ -25,7 +25,7 @@ const ContinueWatching = () => {
                             dispatch(myListActions.removeWatchHistory(item.slug ?? item.id))
                         }}
                     >
-                        <Card.Cover source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w500${item.poster_path}` }} />
+                        <Card.Cover style={styles.poster} source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w500${item.poster_path}` }} />
                         <Card.Content>
                             <Text variant='labelLarge' >{item.title?.english ?? item.title ?? item.name}</Text>
                             {/* <Text variant='bodySmall' >{item.overview ?? }</Text> */}
@@ -42,4 +42,9 @@ const ContinueWatching = () => {
 
 export default ContinueWatching
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    poster: {
+        height: 270,
+        aspectRatio: 2 / 3,
+    }
+})

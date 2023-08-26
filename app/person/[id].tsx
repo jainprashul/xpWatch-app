@@ -62,7 +62,7 @@ const PersonPage = () => {
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginVertical: 10 }}>
                 <MediaList data={data?.credits?.cast ?? []} text='Known For' />
                 <MediaList data={data?.movie_credits?.cast ?? []} text='Movies' />
-                <MediaList data={data?.tv_credits?.cast ?? []} text='TV Shows' />
+                <MediaList data={data?.tv_credits?.cast ?? []} text='TV Shows' type='tv' />
             </View>
 
         </ScrollView>
@@ -77,9 +77,13 @@ const styles = StyleSheet.create({
         backgroundColor: theme.colors.background,
         padding: 10,
     },
+    poster: {
+        height: 270,
+        aspectRatio: 2 / 3,
+    }
 })
 
-function MediaList({ data, text }: { data: any[], text: string }) {
+function MediaList({ data, text, type='movie' }: { data: any[], text: string, type?: string }) {
     return <View >
         <Text variant='labelLarge' >{text}</Text>
         <Divider style={{ marginVertical: 6, }} bold />
@@ -87,9 +91,9 @@ function MediaList({ data, text }: { data: any[], text: string }) {
             data={data.sort((a, b) => b.vote_average - a.vote_average)}
             renderItem={({ item }) => {
                 return <Card style={{ margin: 5, width: 180, }} onPress={() => {
-                    // router.push(item.media_type + "/" + item.id)
+                    router.push(type + "/" + item.id)
                 }} >
-                    <Card.Cover source={{ uri: `https://image.tmdb.org/t/p/w342${item.poster_path}` }} />
+                    <Card.Cover style={styles.poster} source={{ uri: `https://image.tmdb.org/t/p/w342${item.poster_path}` }} />
                     <Card.Content>
 
                         <Text style={{ marginTop: 4 }} variant='labelLarge' >{item.title}</Text>

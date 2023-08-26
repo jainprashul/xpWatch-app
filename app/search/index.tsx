@@ -8,6 +8,7 @@ import { groupBy } from '../../utils/utils'
 import { SegmentedButtons, Text, List, Button } from 'react-native-paper'
 import { theme } from '../../style/theme'
 import Loading from '../../components/Loading'
+import { getYear } from '../../components/Shared/List'
 
 const Search = () => {
 
@@ -102,23 +103,24 @@ type SProps = {
   data: any[]
 }
 function SearchList({ data }: SProps) {
-
   return (
     <ScrollView>
       <List.Section>
         <FlatList
           data={data}
-          renderItem={({ item }) => (
+          renderItem={({ item }) => {
+            const year = getYear(item.release_date ?? item.first_air_date ) ?? item.season ?? item.seasonYear ?? item.year
+            return (
             <List.Item style={{ paddingHorizontal: 10 }}
               key={item.id}
-              title={item.title?.userPreferred ?? item.title?.english ?? item.title ?? item.name}
+              title={`${item.title?.userPreferred ?? item.title?.english ?? item.title ?? item.name} (${year})`}
               description={item.overview ?? item.description}
-              left={props => <Image {...props} source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 50 }} />}
+              left={props => <Image {...props} source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
               onPress={() => {
                 router.push(item.media_type + '/' + (item.slug ?? item.id))
               }}
             />
-          )}
+          )}}
         />
       </List.Section>
     </ScrollView>

@@ -33,12 +33,12 @@ const OverviewDetails = ({ result, cast, recommandations, similars , seasons}: P
             <Text variant='labelLarge' >Cast</Text>
             <Divider style={{ marginVertical: 6, }} bold />
             <FlatList
-                data={cast}
+                data={cast?.filter((item) => item.profile_path !== null) ?? []}
                 renderItem={({ item }) => {
                     return <Card style={{ margin: 5, width: 180 }} onPress={() => {
                         router.push('person/' + item.id)
                     }}>
-                        <Card.Cover source={{ uri: `https://image.tmdb.org/t/p/w500${item.profile_path}` }} />
+                        <Card.Cover style={styles.poster} source={{ uri: `https://image.tmdb.org/t/p/w500${item.profile_path}` }} />
                         <Card.Content>
                             <Text variant='labelLarge' >{item.name}</Text>
                             <Text variant='bodySmall' >{item.character}</Text>
@@ -58,7 +58,12 @@ const OverviewDetails = ({ result, cast, recommandations, similars , seasons}: P
 
 export default OverviewDetails
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    poster: {
+        height: 270,
+        aspectRatio: 2 / 3,
+    }
+})
 
 type SProps = {
     result: RecommendationsResult[],
@@ -78,7 +83,7 @@ export function RecommandationView({ result, text, size=180 }: SProps) {
                     return <Card style={{ margin: 5, width: size, }} onPress={() => {
                         router.push(item.media_type + "/" + item.id)
                     }} >
-                        <Card.Cover source={{ uri: `https://image.tmdb.org/t/p/w342${item.poster_path}` }} />
+                        <Card.Cover style={styles.poster} source={{ uri: `https://image.tmdb.org/t/p/w342${item.poster_path}` }} />
                         <Card.Content>
 
                             <Text style={{marginTop : 4}} variant='labelLarge' ><MaterialIcons style={{ padding : 4 }} name={item.media_type} size={20} color={'white'} /> {item.title ?? item.name}</Text>

@@ -1,4 +1,4 @@
-import { StyleSheet, ToastAndroid, RefreshControl } from 'react-native'
+import { StyleSheet, ToastAndroid, RefreshControl, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Stack } from 'expo-router'
@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { theme } from '../../style/theme'
 import { fetchMovies, fetchTV } from '../../store/context/homeSlice'
 import Loading from '../../components/Loading'
+import Slider from '../../components/Shared/Slider'
 
 const TV = () => {
     const dispatch = useAppDispatch()
@@ -62,7 +63,12 @@ const TV = () => {
                 headerShown: true,
                 title: `TV Shows`,
             }} />
-            <List data={trending as any[]} name='Trending' horizontal />
+            <Slider data={trending.slice(0, 10)} />
+            <View style={{
+                flex: 1,
+                padding: 10,
+            }}>
+                <List data={trending as any[]} name='Trending' horizontal />
             <List data={data.popular as any[]} name='Popular' horizontal />
             <List data={data.topRated as any[]} name='Top Rated' horizontal />
             {
@@ -70,6 +76,8 @@ const TV = () => {
                     return <List data={item.results as any[]} name={item.name} horizontal />
                 })
             }
+            
+                </View>
 
         </ScrollView>
     )
@@ -81,7 +89,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: theme.colors.background,
-        padding: 10
+        
     }
 
 })

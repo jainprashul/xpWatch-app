@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { has, myListActions, selectHistoryByID } from '../../store/context/myListSlice'
 import { animeActions } from '../../store/context/animeSlice'
 import Ratings from '../../components/Ratings'
+import { POSTER_HEIGHT, POSTER_WIDTH } from '../../components/Shared/List'
 
 
 const AnimeDetail = () => {
@@ -236,7 +237,7 @@ const AnimeDetail = () => {
                     <Divider style={{ marginVertical: 6, }} bold /></>}
                 <ScrollView horizontal style={{ flexDirection: 'row', marginVertical: 10, gap: 4 }}>
                     {similars?.sort((a, b) => (b.averageScore ?? 0) - (a.averageScore ?? 0)).map((movie) => {
-                        return <Card style={{ margin: 5, width: 180, }} onPress={() => {
+                        return <Card style={{ margin: 5, width: POSTER_WIDTH, }} onPress={() => {
                             router.push('anime/' + movie.id)
                         }} >
                             <Card.Cover  style={styles.poster} source={{ uri: movie.coverImage }} />
@@ -264,7 +265,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     poster: {
-        height: 270,
+        height: POSTER_HEIGHT,
         aspectRatio: 2 / 3,
     }
 })

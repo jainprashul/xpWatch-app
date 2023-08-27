@@ -11,6 +11,7 @@ import { RecommandationView } from '../../components/OverviewDetails'
 import { MaterialIcons } from '@expo/vector-icons'
 import Loading from '../../components/Loading'
 import analytics from '@react-native-firebase/analytics'
+import { POSTER_HEIGHT, POSTER_WIDTH } from '../../components/Shared/List'
 
 const PersonPage = () => {
     const { id } = useLocalSearchParams()
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     poster: {
-        height: 270,
+        height: POSTER_HEIGHT,
         aspectRatio: 2 / 3,
     }
 })
@@ -90,7 +91,7 @@ function MediaList({ data, text, type='movie' }: { data: any[], text: string, ty
         <FlatList
             data={data.sort((a, b) => b.vote_average - a.vote_average)}
             renderItem={({ item }) => {
-                return <Card style={{ margin: 5, width: 180, }} onPress={() => {
+                return <Card style={{ margin: 5, width: POSTER_WIDTH, }} onPress={() => {
                     router.push(type + "/" + item.id)
                 }} >
                     <Card.Cover style={styles.poster} source={{ uri: `https://image.tmdb.org/t/p/w342${item.poster_path}` }} />

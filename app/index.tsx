@@ -14,6 +14,7 @@ import analytics from '@react-native-firebase/analytics'
 import { fetchGenre, fetchTrending } from '../store/context/homeSlice'
 import { FlatList } from 'react-native-gesture-handler'
 import { generateRandomColor } from '../utils/utils'
+import Slider from '../components/Shared/Slider'
 
 const logo = 'https://xpwatch.vercel.app/logo.png'
 
@@ -53,7 +54,11 @@ const Home = () => {
         title: 'xpWatch',
         headerTitle: props => <Header />,
       }} />
-      <View>
+        <Slider data={all.slice(0, 10)} />
+      <View style={{
+        flex: 1,
+        padding: 10,
+      }}>
         <Search />
         <ContinueWatching />
         <List data={all} horizontal />
@@ -73,7 +78,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    padding: 10
   },
   genreChip: {
     margin: 5,
@@ -91,7 +95,7 @@ export function Header() {
           style={{ width: 40, height: 30 }}
           source={{ uri: logo }}
         />
-        <Text> xpWatch</Text>
+        <Text>xpWatch</Text>
       </View>
       <View style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row', alignItems: "center", marginRight: 24 }}>
         <MaterialIcons name="favorite" size={30} color="#fff" onPress={() => {

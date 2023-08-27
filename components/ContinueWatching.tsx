@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { myListActions, selectWatchHistory } from '../store/context/myListSlice'
 import { Card, Divider, Text } from 'react-native-paper'
 import { router } from 'expo-router'
+import { POSTER_HEIGHT, POSTER_WIDTH } from './Shared/List'
 
 const ContinueWatching = () => {
     const data = useAppSelector(selectWatchHistory)
@@ -16,7 +17,7 @@ const ContinueWatching = () => {
             <FlatList
                 data={data}
                 renderItem={({ item }) => {
-                    return <Card style={{ margin: 5, width: 180 }} onPress={() => {
+                    return <Card style={{ margin: 5, width: POSTER_WIDTH }} onPress={() => {
                         router.push(item.type + '/' + item.id)
                     }}
                         onLongPress={() => {
@@ -35,6 +36,8 @@ const ContinueWatching = () => {
 
                 keyExtractor={(item) => item.id.toString()}
                 horizontal
+                decelerationRate="fast"
+                snapToInterval={POSTER_WIDTH + 10}
             />
         </View>
     )
@@ -44,7 +47,7 @@ export default ContinueWatching
 
 const styles = StyleSheet.create({
     poster: {
-        height: 270,
+        height: POSTER_HEIGHT,
         aspectRatio: 2 / 3,
     }
 })

@@ -6,6 +6,7 @@ import { router } from 'expo-router';
 import { Cast, MovieDetail, RecommendationsResult } from '../types/movieDetail';
 import { TVDetails } from '../types/tvDetails';
 import { MaterialIcons } from '@expo/vector-icons';
+import { POSTER_HEIGHT, POSTER_WIDTH } from './Shared/List';
 
 
 type Props = {
@@ -35,7 +36,7 @@ const OverviewDetails = ({ result, cast, recommandations, similars , seasons}: P
             <FlatList
                 data={cast?.filter((item) => item.profile_path !== null) ?? []}
                 renderItem={({ item }) => {
-                    return <Card style={{ margin: 5, width: 180 }} onPress={() => {
+                    return <Card style={{ margin: 5, width: POSTER_WIDTH }} onPress={() => {
                         router.push('person/' + item.id)
                     }}>
                         <Card.Cover style={styles.poster} source={{ uri: `https://image.tmdb.org/t/p/w500${item.profile_path}` }} />
@@ -60,7 +61,7 @@ export default OverviewDetails
 
 const styles = StyleSheet.create({
     poster: {
-        height: 270,
+        height: POSTER_HEIGHT,
         aspectRatio: 2 / 3,
     }
 })
@@ -72,7 +73,7 @@ type SProps = {
 }
 
 
-export function RecommandationView({ result, text, size=180 }: SProps) {
+export function RecommandationView({ result, text, size=POSTER_WIDTH }: SProps) {
     if (result.length === 0) return null
     return <>
         <Text variant='labelLarge' >{text}</Text>

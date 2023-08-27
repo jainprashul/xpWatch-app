@@ -8,10 +8,13 @@ import { router } from 'expo-router';
 import Loading from '../Loading';
 import { theme } from '../../style/theme';
 
+export const POSTER_WIDTH = 180
+export const POSTER_HEIGHT = 270
+
 export const styles = StyleSheet.create({
     poster : {
         aspectRatio: 2/3,
-        height: 270,
+        height: POSTER_HEIGHT,
     }
 })
 
@@ -78,7 +81,11 @@ function HorizontalList({ data, name, link }: Props) {
             <Divider style={{ marginVertical: 6, }} bold />
             <FlatList data={data} renderItem={({ item }) => {
                 return !isAnime(item) ? <ItemView item={item as Media} /> : <AnimeItemView item={item as Anime} />
-            }} keyExtractor={(item) => item.id.toString()} horizontal />
+            }} keyExtractor={(item) => item.id.toString()} horizontal
+                decelerationRate="fast"
+                snapToInterval={POSTER_WIDTH + 10}
+                
+             />
         </>
     )
 }
@@ -99,7 +106,7 @@ function ItemView({ item }: { item: Media }) {
     return (
         // Flat List Item
         <>
-            <Card style={{ margin: 5, flex: 1, width: 180 }}>
+            <Card style={{ margin: 5, flex: 1, width: POSTER_WIDTH }}>
                 <Pressable onLongPress={(e) => {
                     console.log(item)
                 }} onPress={_onPress} >
@@ -132,7 +139,7 @@ function AnimeItemView({ item }: { item: Anime }) {
 
     return (
         <>
-            <Card style={{ margin: 5, flex: 1, width: 180 }}>
+            <Card style={{ margin: 5, flex: 1, width: POSTER_WIDTH }}>
                 <Pressable onLongPress={(e) => {
                     console.log(item)
                 }} onPress={_onPress} >

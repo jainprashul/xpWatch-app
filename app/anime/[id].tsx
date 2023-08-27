@@ -14,6 +14,7 @@ import analytics from '@react-native-firebase/analytics';
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { has, myListActions, selectHistoryByID } from '../../store/context/myListSlice'
 import { animeActions } from '../../store/context/animeSlice'
+import Ratings from '../../components/Ratings'
 
 
 const AnimeDetail = () => {
@@ -212,9 +213,10 @@ const AnimeDetail = () => {
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
                         <Text variant='labelLarge'>{result.year} </Text>
                         <Text variant='labelLarge'>{result.season}</Text>
-                        <Text variant='labelLarge'>{result.episodes?.length} Episodes</Text>
+                        <Text variant='labelLarge'>{episodes?.length} Episodes</Text>
                     </View>
-                    <Text variant='labelLarge'>{result.averageScore} / 100</Text>
+                    
+                    <Ratings ratings={result?.averageScore / 10 ?? 0} />
                 </View>
 
             </ImageBackground>

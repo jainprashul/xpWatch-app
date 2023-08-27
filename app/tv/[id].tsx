@@ -15,6 +15,7 @@ import { tvActions } from '../../store/context/tvSlice'
 import { has, myListActions, selectHistoryByID } from '../../store/context/myListSlice'
 import { MaterialIcons } from '@expo/vector-icons';
 import analytics from '@react-native-firebase/analytics'
+import Ratings from '../../components/Ratings'
 
 
 const TvPage = () => {
@@ -212,7 +213,7 @@ const TvPage = () => {
                 <Text variant='labelLarge'>{result.number_of_seasons} Seasons</Text>
                 <Text variant='labelLarge'>{result.number_of_episodes} Episodes</Text>
             </View>
-            <Text variant='labelLarge'>{result.vote_average} / 10</Text>
+            <Ratings ratings={result?.vote_average ?? 0} />
         </Overview>
     )
 }

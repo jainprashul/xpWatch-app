@@ -14,6 +14,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { has, myListActions } from '../../store/context/myListSlice'
 import analytics from '@react-native-firebase/analytics'
+import Ratings from '../../components/Ratings'
 
 const MoviePage = () => {
     const dispatch = useAppDispatch();
@@ -142,7 +143,7 @@ const MoviePage = () => {
 
             <Divider style={{ marginVertical: 6, }} bold />
             <Text variant='labelLarge' >{result?.release_date.toString() ?? ''} - {result?.runtime ?? 0} mins </Text>
-            <Text variant='labelLarge' >{result?.vote_average ?? 0} / 10</Text>
+            <Ratings ratings={result?.vote_average ?? 0} />
 
         </Overview>
     )

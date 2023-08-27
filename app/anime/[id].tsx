@@ -215,8 +215,9 @@ const AnimeDetail = () => {
                         <Text variant='labelLarge'>{result.year} </Text>
                         <Text variant='labelLarge'>{result.season}</Text>
                         <Text variant='labelLarge'>{episodes?.length} Episodes</Text>
+                        <Text variant='labelLarge'>{result?.duration} min</Text>
                     </View>
-                    
+
                     <Ratings ratings={result?.averageScore / 10 ?? 0} />
                 </View>
 

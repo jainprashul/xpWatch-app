@@ -22,7 +22,7 @@ const Player = () => {
     const { sources, type, result, recommandations } = useLocalSearchParams()
     const srcs = JSON.parse(sources as string)
     const data = JSON.parse(result as string)
-    const recommandationsData = JSON.parse(recommandations as string)
+    const recommandationsData = JSON.parse((recommandations ?? "[]") as string)
 
     const XView = ({ type }: { type: string }) => {
         switch (type) {

@@ -49,7 +49,7 @@ const TvPage = () => {
 
 
     useEffect(() => {
-        console.log(id)
+        // console.log(id)
         getTVData(id as string).then((res) => {
             setData(res)
             setLoading1(false)
@@ -58,7 +58,7 @@ const TvPage = () => {
                 screen_class: 'TV'
             })
         }).catch((err) => {
-            console.log('tv ', err)
+            console.error('tv ', err)
             setLoading1(false)
         })
     }, [id])
@@ -68,7 +68,7 @@ const TvPage = () => {
             dispatch(tvActions.setSeasonDetail(res))
             setLoading2(false)
         }).catch((err) => {
-            console.log('season ', err)
+            console.error('season ', err)
         })
     }, [current.season])
 

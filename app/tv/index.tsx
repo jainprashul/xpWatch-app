@@ -39,7 +39,7 @@ const TV = () => {
           ToastAndroid.show('Refreshed', ToastAndroid.SHORT)
         }
       } catch (error) {
-        console.log(error)
+        console.error(error)
         ToastAndroid.show('Something went wrong', ToastAndroid.SHORT)
       } finally {
         setRefreshing(false)

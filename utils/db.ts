@@ -51,7 +51,7 @@ export const getEpisodeSources = async (sources : any ) => {
 
 export const getTVData = async (id : string, seasonID = 1, episodeID = 1) => {
     try {
-        console.log('tv', t(id));
+        // console.log('tv', t(id));
         const res = await (await fetch(t(id))).json() as TVDetails;
         const { recommendations: recommandation, credits: credit, similar, external_ids } = res;
         delete res.recommendations;
@@ -77,7 +77,7 @@ export const getTVData = async (id : string, seasonID = 1, episodeID = 1) => {
 export type TvShowsX = Awaited<ReturnType<typeof getTVData>>;
 
 export const getTVSeasonData = async (id : string, seasonID = 1) => {
-    console.log('tv', tv.season(id, seasonID));
+    // console.log('tv', tv.season(id, seasonID));
     const season = await (await fetch(tv.season(id, seasonID))).json();
     return season;
 }
@@ -135,7 +135,7 @@ export const getTVSeasonEpisodeSources = (id : string, seasonID = 1, episodeID =
 export type TvShowsSrc = Awaited<ReturnType<typeof getTVSeasonEpisodeSources>>;
 
 export const getMovieData = async (id : string) => {
-    console.log('movie', m(id));
+    // console.log('movie', m(id));
     const res = await (await fetch(m(id))).json() as MovieDetail;
     const { recommendations: recommandation, credits: credit, similar, external_ids } = res;
 

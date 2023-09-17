@@ -99,7 +99,7 @@ export const fetchTrending = createAsyncThunk("home/fetchTrending", async () => 
             bollywood: res[4].results.map((movie: any) => ({ ...movie, media_type: "movie" })),
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
         throw error;
     }
 });
@@ -110,7 +110,7 @@ export const fetchGenre = createAsyncThunk("home/fetchGenre", async () => {
         const data = await res.json();
         return data.genres;
     } catch (error) {
-        console.log(error);
+        console.error(error);
         throw error;
     }
 });
@@ -141,7 +141,7 @@ export const fetchMovies = createAsyncThunk("home/fetchMovies", async (page: num
             })),
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
         throw error;
     }
 });
@@ -171,7 +171,7 @@ export const fetchTV = createAsyncThunk("home/fetchTV", async (page: number) => 
                 id: genresList.genres[i].id, name: genresList.genres[i].name })),
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
         throw error;
     }
 });

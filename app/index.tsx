@@ -5,10 +5,10 @@ import { theme } from '../style/theme'
 import { Image, ScrollView, ToastAndroid } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import List from '../components/Shared/List'
-import { Chip, Text } from 'react-native-paper';
+import { Chip, Divider, Menu, Text } from 'react-native-paper';
 import { Media } from '../types/media'
 import Search from '../components/Search'
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import ContinueWatching from '../components/ContinueWatching'
 import analytics from '@react-native-firebase/analytics'
 import { fetchGenre, fetchTrending } from '../store/context/homeSlice'
@@ -54,7 +54,7 @@ const Home = () => {
         title: 'xpWatch',
         headerTitle: props => <Header />,
       }} />
-        <Slider data={all.slice(0, 10)} />
+      <Slider data={all.slice(0, 10)} />
       <View style={{
         flex: 1,
         padding: 10,
@@ -67,7 +67,7 @@ const Home = () => {
         <List data={(bollywood ?? []) as Media[]} name='Bollywood' horizontal />
         <List data={anime} name='Anime' horizontal />
       </View>
-        <GenreList />
+      <GenreList />
     </ScrollView>
   )
 }
@@ -88,6 +88,14 @@ const styles = StyleSheet.create({
 
 
 export function Header() {
+
+  const [visible, setVisible] = React.useState(false);
+  const user = useAppSelector(state => state.auth.user)
+
+  const openMenu = () => setVisible(true);
+
+  const closeMenu = () => setVisible(false);
+
   return (
     <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
       <View style={{ flex: 1, flexDirection: 'row', alignItems: "center" }}>
@@ -98,15 +106,33 @@ export function Header() {
         <Text>xpWatch</Text>
       </View>
       <View style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row', alignItems: "center", marginRight: 24 }}>
-        <MaterialIcons name="favorite" size={30} color="#fff" onPress={() => {
-          router.push('list')
-        }} />
+        <Menu
+          visible={visible}
+          onDismiss={closeMenu}
+          anchorPosition='bottom'
+          anchor={<MaterialCommunityIcons name="dots-vertical" color={'white'} size={24}  onPress={openMenu} />}>
+          {
+            user ? <Menu.Item onPress={() => {
+              router.push('/profile')
+              closeMenu()
+            }
+            } title="Profile" /> : <Menu.Item onPress={() => {
+              router.push('/login')
+              closeMenu()
+            }} leadingIcon={'login'} title="Login" />
+          }
+          <Menu.Item onPress={() => {
+            router.push('/list')
+            closeMenu()
+          }} leadingIcon={() =><MaterialIcons name="favorite" size={24} color="white" />} title="My List" />
+        </Menu>
+
       </View>
     </View>
   );
 }
 
-function GenreList () {
+function GenreList() {
   const genrelist = useAppSelector(state => state.home.genre)
   return (
     <View style={{
@@ -114,8 +140,8 @@ function GenreList () {
       marginVertical: 10,
     }}>
       <Text>Genre</Text>
-      <FlatList data={genrelist} numColumns={4} renderItem={({item}) => (
-        <Chip onPress={()=> {
+      <FlatList data={genrelist} numColumns={4} renderItem={({ item }) => (
+        <Chip onPress={() => {
           router.push({
             pathname: 'genre',
             params: {
@@ -125,9 +151,9 @@ function GenreList () {
           })
         }} style={{
           ...styles.genreChip, backgroundColor: generateRandomColor(0.7)
-        }} textStyle={{color: 'white'}}>{item.name}</Chip>
+        }} textStyle={{ color: 'white' }}>{item.name}</Chip>
       )} />
-      
+
     </View>
   )
 }

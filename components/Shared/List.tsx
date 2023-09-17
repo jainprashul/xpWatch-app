@@ -108,7 +108,7 @@ function ItemView({ item }: { item: Media }) {
         <>
             <Card style={{ margin: 5, flex: 1, width: POSTER_WIDTH }}>
                 <Pressable onLongPress={(e) => {
-                    console.log(item)
+                    // console.log(item)
                 }} onPress={_onPress} >
                     <Card.Cover style={styles.poster} source={{ uri: `https://image.tmdb.org/t/p/w342${poster_path}` }} />
                 </Pressable>
@@ -141,7 +141,7 @@ function AnimeItemView({ item }: { item: Anime }) {
         <>
             <Card style={{ margin: 5, flex: 1, width: POSTER_WIDTH }}>
                 <Pressable onLongPress={(e) => {
-                    console.log(item)
+                    // console.log(item)
                 }} onPress={_onPress} >
                     <Card.Cover style={styles.poster} source={{ uri: coverImage ?? bannerImage }} />
                 </Pressable>

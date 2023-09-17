@@ -14,7 +14,7 @@ const Ratings = ( {ratings}: RatingsProps ) => {
     const emptyStars = 5 - (filledStars + halfStars)
     
     const r = [...Array(filledStars).fill('star'), ...Array(halfStars).fill('star-half-o'), ...Array(emptyStars).fill('star-o')]
-    console.log(filledStars, halfStars, emptyStars, r)
+    // console.log(filledStars, halfStars, emptyStars, r)
   return (
     <View style={styles.ratings}>
       <Text variant='labelLarge' style={styles.ratingNumber}>{ratings}</Text>

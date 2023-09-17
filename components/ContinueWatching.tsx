@@ -21,6 +21,7 @@ const ContinueWatching = () => {
                         router.push(item.type + '/' + item.id)
                     }}
                         onLongPress={() => {
+                            console.log(item)
                             // dispatch(removeFromMyList(item))
                             console.log('remove')
                             dispatch(myListActions.removeWatchHistory(item.slug ?? item.id))
@@ -34,7 +35,7 @@ const ContinueWatching = () => {
                     </Card>
                 }}
 
-                keyExtractor={(item) => item.id.toString()}
+                // keyExtractor={(item) => item.id.toString()}
                 horizontal
                 decelerationRate="fast"
                 snapToInterval={POSTER_WIDTH + 10}

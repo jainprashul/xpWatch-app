@@ -6,6 +6,7 @@ import tvSlice from "./context/tvSlice";
 import myListSlice from "./context/myListSlice";
 import playerSlice from "./context/playerSlice";
 import animeSlice from "./context/animeSlice";
+import authSlice from "./context/authSlice";
 
 
 const rootReducer = combineReducers({
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
  anime : animeSlice ,
  myList : myListSlice,
  player : playerSlice,
+ auth : authSlice,
 })
 
 const persistConfig  = {

@@ -61,7 +61,7 @@ type BannerCardProps = {
 function BannerCard({ item }: BannerCardProps) {
     return (
         <TouchableHighlight onPress={()=> {
-            console.log(item)
+            // console.log(item)
             router.push(`${item.media_type}/${item.id}}`)
                 
         }}>

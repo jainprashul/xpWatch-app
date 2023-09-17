@@ -34,7 +34,7 @@ const Search = () => {
       fetchSearch(q, page).then((res) => {
         setData(res)
       }).catch((err) => {
-        console.log(err)
+        console.error(err)
       }).finally(() => {
         setLoading(false)
       })

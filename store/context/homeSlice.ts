@@ -1,9 +1,10 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { animeX, genre, hindi, trending, movie, tv } from "../../utils/constants";
+import { animeX, genre, hindi, trending, movie, tv, anilist } from "../../utils/constants";
 import { Media } from "../../types/media";
 import { TV } from "../../types/tv";
 import { Movie } from "../../types/movie";
 import { Anime } from "../../types/anime";
+import { AniList } from "../../types/anilist";
 
 type initState = {
     name: string;
@@ -12,14 +13,14 @@ type initState = {
         movies: Array<Movie>;
         tv: Array<TV>;
         all: Array<Media>;
-        anime: Array<Anime>;
+        anime: Array<AniList>;
         bollywood: Array<Movie>;
     },
     discover: {
         movies: Array<Movie>;
         tv: Array<TV>;
         all: Array<Media>;
-        anime: Array<Anime>;
+        anime: Array<AniList>;
     },
     movies: {
         popular: Array<Movie>;
@@ -86,14 +87,14 @@ export const fetchTrending = createAsyncThunk("home/fetchTrending", async () => 
         const all = fetch(trending.all);
         const movies = fetch(trending.today.movies);
         const tv = fetch(trending.today.tv);
-        // const anime = fetch(animeX.popular(1));
+        const anime = fetch(anilist.trending(1));
         const bollywood = fetch(hindi.recentMovie(1));
-        const data = await Promise.allSettled([all, movies, tv,  bollywood]);
+        const data = await Promise.allSettled([all, movies, tv, bollywood, anime]);
 
         
 
         const res = await Promise.all(data.map((res) => {
-            if (res.status === "fulfilled") {
+            if (res.status === "fulfilled" && res.value.ok) {
                 return res.value.json();
             }
             return null;
@@ -102,8 +103,8 @@ export const fetchTrending = createAsyncThunk("home/fetchTrending", async () => 
             all: res[0].results,
             movies: res[1].results,
             tv: res[2].results,
-            anime: res[3]?.data ?? [],
-            bollywood: res[4].results.map((movie: any) => ({ ...movie, media_type: "movie" })),
+            bollywood: res[3].results.map((movie: any) => ({ ...movie, media_type: "movie" })),
+            anime: res[4]?.results.map((anime: any) => ({ ...anime, media_type: "anime" })),
         }
     } catch (error) {
         console.log(error);

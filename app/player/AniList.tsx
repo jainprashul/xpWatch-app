@@ -6,15 +6,17 @@ import { playerAction } from '../../store/context/playerSlice'
 import { AnimeDetail, Episode } from '../../types/animeDetail'
 import { FlatList } from 'react-native-gesture-handler'
 import { animeActions } from '../../store/context/animeSlice'
-import { getEpisodeSources } from '../../utils/db'
+import { getAniEpisodeSources, getEpisodeSources } from '../../utils/db'
 import analytics from '@react-native-firebase/analytics'
+import { AniList } from '../../types/anilist'
+import { EpisodeAni } from '../../types/anilistDetails'
 
 type Props = {
-    data: AnimeDetail
+    data: AniList
     srcs: any
 }
 
-const Anime = ({ data, srcs }: Props) => {
+const AniListWatch = ({ data, srcs }: Props) => {
     const dispatch = useAppDispatch()
     const src = useAppSelector((state) => state.player.src)
     useEffect(() => {
@@ -26,7 +28,7 @@ const Anime = ({ data, srcs }: Props) => {
     }, [])
 
     const episode = useAppSelector((state) => state.anime.current.episode)
-    const episodes = useAppSelector((state) => state.anime.episodes) as Episode[]
+    const episodes = useAppSelector((state) => state.anime.episodes) as EpisodeAni[]
 
     const currentEp = useMemo(() => {
         return episodes?.find((v) => v.number === episode)
@@ -36,7 +38,7 @@ const Anime = ({ data, srcs }: Props) => {
     useEffect(() => {
         if (currentEp) {
             (async () => {
-                const srcs = await getEpisodeSources(currentEp?.sources)
+                const srcs = await getAniEpisodeSources(currentEp?.id)
                 if (srcs.length === 0) {
                     console.log('no srcs')
                     return
@@ -55,7 +57,7 @@ const Anime = ({ data, srcs }: Props) => {
     return (
         <View>
             <Text variant='labelLarge'>{episode}. {currentEp?.title}</Text>
-            <Text variant='labelSmall'>{currentEp?.airedAt}</Text>
+            {/* <Text variant='labelSmall'>{currentEp?.airedAt}</Text> */}
             <Text variant='labelLarge'>{data?.title.english ?? data.title.userPreferred} </Text>
             <Text variant='labelSmall'>{data?.title.native}</Text>
 
@@ -74,6 +76,7 @@ const Anime = ({ data, srcs }: Props) => {
                 })}
             />
 
+
             <ScrollView>
                 <List.Section>
                     <List.Accordion expanded
@@ -82,11 +85,10 @@ const Anime = ({ data, srcs }: Props) => {
                             data={episodes}
                             renderItem={({ item: v }) => (<List.Item
                                 key={v.id}
-                                title={`${v.number}. ${v.title}`}
+                                title={`${v.number}. ${v.title ?? 'Episode ' + v.number}`}
                                 description={v.description}
                                 onPress={() => {
                                     dispatch(animeActions.setEpisode(v.number))
-
                                 }}
                                 left={props => <Image {...props} source={{ uri: v.image ?? '' }} style={{ width: 80, height: 100, borderRadius: 10, marginVertical: 10 }} />}
                             />)}
@@ -99,4 +101,4 @@ const Anime = ({ data, srcs }: Props) => {
     )
 }
 
-export default Anime
+export default AniListWatch

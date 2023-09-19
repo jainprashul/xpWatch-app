@@ -1,18 +1,13 @@
-import { Anime, AnimeRes } from "../types/anime";
+import { AniListDetail } from "../types/anilistDetails";
+import { AnimeRes } from "../types/anime";
 import { AnimeDetail } from "../types/animeDetail";
 import { MovieDetail } from "../types/movieDetail";
 import { TVDetails } from "../types/tvDetails";
-import { animeAPI, animeX, m, movieAPI, t, tv, tvAPI } from "./constants"
-
+import { anilist, animeAPI, animeX, m, movieAPI, t, tv, tvAPI } from "./constants"
 
 export async function getAnimeData(id : string) {
     try {
         const res = await (await fetch(animeX.anime(id))).json() as AnimeDetail;
-        const recents = await (await fetch(animeX.recent(1))).json() as AnimeRes;
-        // const recommandation = recents.data.map(x => x.anime)
-
-        // console.log('animeDB', res, recents);
-
         const { relations: similar, mappings: external_ids, episodes, mappings } = res;
 
         delete res.lastChecks;
@@ -28,7 +23,7 @@ export async function getAnimeData(id : string) {
             episodes,
             mappings,
             similars,
-            // recommandations,
+            recommandations: [],
         }
     } catch (error) {
         throw error;
@@ -47,6 +42,61 @@ export const getEpisodeSources = async (sources : any ) => {
         videoSrc: l?.url || '',
     }))
     return watchLinks;
+}
+
+
+export const getAnilistDetails = async (id : string) => {
+    try {
+        const res = await (await fetch(anilist.anime(id))).json() as AniListDetail;
+        const { episodes, relations: similar, recommendations  } = res;
+        delete res.episodes;
+        delete res.relations;
+        delete res.recommendations;
+
+        const similars = similar?.map(item => ({ ...item, media_type: 'anime', type: item.type }));
+        const recommandations = recommendations?.map(item => ({ ...item, media_type: 'anime' }))
+
+        return {
+            result: res,
+            similars,
+            recommandations,
+            episodes,
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
+export type AnilistX = Awaited<ReturnType<typeof getAnilistDetails>>;
+
+export const getAniEpisodeSources = async (id : string) => {
+   try {
+    const res = await fetch(anilist.watchEpisode(id))
+    const links = await res.json();
+    
+    console.log(anilist.watchEpisode(id), links)
+    const watchLinks = links.map((l : any) => ({
+        server: l.name,
+        quality: 'HD',
+        title: 'Watch on ' + l.name,
+        url: l?.url || '',
+        type: 'embed',
+        videoSrc: l?.url || '',
+    }))
+    return watchLinks;
+   } catch (error) {
+    const res = await fetch(anilist.watchEpisode2(id))
+    const links = await res.json();
+    const watchLinks = [{
+        server: 'AnimeX',
+        quality: 'HD',
+        title: 'Watch on AnimeX',
+        url: links.headers.Referer,
+        type: 'embed',
+        videoSrc: links.headers.Referer,
+    }]
+    return watchLinks;
+   }
 }
 
 export const getTVData = async (id : string, seasonID = 1, episodeID = 1) => {

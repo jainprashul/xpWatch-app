@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, Dimensions, Image, ImageBackground, TouchableOpacity, Pressable, TouchableHighlight } from 'react-native'
 import React from 'react'
 import { FlatList } from 'react-native-gesture-handler'
-import { generateRandomColor } from '../../utils/utils'
 import { router } from 'expo-router'
 
 const { width } = Dimensions.get('window')

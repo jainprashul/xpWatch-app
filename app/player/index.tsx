@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native'
-import React, { useEffect, useMemo } from 'react'
+import React from 'react'
 import { WebView } from 'react-native-webview';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { theme } from '../../style/theme';
@@ -11,6 +11,7 @@ import TV from './TV';
 import Anime from './Anime';
 import { useKeepAwake } from 'expo-keep-awake';
 import { RecommandationView } from '../../components/OverviewDetails';
+import AniList from './AniList';
 
 
 
@@ -32,6 +33,8 @@ const Player = () => {
                 return <Movie data={data} srcs={srcs} />
             case 'anime':
                 return <Anime data={data} srcs={srcs} />
+            case 'anilist':
+                return <AniList data={data} srcs={srcs} />
         }
     }
 

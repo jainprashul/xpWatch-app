@@ -26,6 +26,16 @@ export const animeX = {
     animeEpisodes: (id: string) => `https://api.enime.moe/anime/${id}/episodes`,
 }
 
+export const anilist = {
+    trending : (page: number) => `https://api.consumet.org/meta/anilist/trending?page=${page}&perPage=${count}`,
+    popular: (page: number) => `https://api.consumet.org/meta/anilist/popular?page=${page}&perPage=${count}`,
+    recent: (page: number) => `https://api.consumet.org/meta/anilist/recent-episodes?page=${page}&perPage=${count}`,
+    search: (query: string, page: number) => `https://api.consumet.org/meta/anilist/${query}?page=${page}`,
+    anime: (id: any) => `https://api.consumet.org/meta/anilist/info/${id}`,
+    watchEpisode: (id: string) => `https://api.consumet.org/gogoanime/servers/${id}`,
+    watchEpisode2: (id: string) => `https://api.consumet.org/meta/anilist/watch/${id}`,
+}
+
 export const tv = {
     popular: (page: number) => `https://api.themoviedb.org/3/tv/popular?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}&region=IN&language=en-US&page=${page}`,
     topRated: (page: number) => `https://api.themoviedb.org/3/tv/top_rated?api_key=${process.env.EXPO_PUBLIC_TMDB_API_KEY}&region=IN&language=en-US&page=${page}`,

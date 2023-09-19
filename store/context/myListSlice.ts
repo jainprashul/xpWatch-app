@@ -3,6 +3,7 @@ import { RootState } from ".."
 import { MovieDetail } from "../../types/movieDetail"
 import { TVDetails } from "../../types/tvDetails"
 import { AnimeDetail } from "../../types/animeDetail"
+import { AniListDetail } from "../../types/anilistDetails"
 
 type initState = {
     loading : boolean
@@ -11,7 +12,7 @@ type initState = {
     data : {
         tv : Record<string, TVDetails>
         movie : Record<string, MovieDetail>
-        anime : Record<string, AnimeDetail>
+        anime : Record<string, AnimeDetail | AniListDetail>
         history : Record<string, {
             s : number, e : number
         }>
@@ -82,9 +83,9 @@ const myListSlice = createSlice({
             const id  = action.payload
             delete state.data.tv[id]
         },
-        addAnime(state , action : PayloadAction<AnimeDetail>){
-            const { slug } = action.payload
-            state.data.anime[slug] = action.payload;
+        addAnime(state , action : PayloadAction<AnimeDetail | AniListDetail>){
+            const {  id } = action.payload
+            state.data.anime[id] = action.payload;
         },
         removeAnime(state , action : PayloadAction<string>){
             const id = action.payload

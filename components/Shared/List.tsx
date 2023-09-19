@@ -7,20 +7,21 @@ import { Anime } from '../../types/anime';
 import { router } from 'expo-router';
 import Loading from '../Loading';
 import { theme } from '../../style/theme';
+import { AniList } from '../../types/anilist';
 
 export const POSTER_WIDTH = 180
 export const POSTER_HEIGHT = 270
 
 export const styles = StyleSheet.create({
-    poster : {
-        aspectRatio: 2/3,
+    poster: {
+        aspectRatio: 2 / 3,
         height: POSTER_HEIGHT,
     }
 })
 
 
 type Props = {
-    data: Array<Media | Anime>
+    data: Array<Media | Anime | AniList>
     name?: string
     horizontal?: boolean
     link?: string
@@ -47,7 +48,7 @@ const List = ({ data, name, horizontal, link }: Props) => {
             </View>
             <Divider style={{ marginVertical: 6, }} bold />
             <FlatList data={data} renderItem={({ item }) => {
-                return !isAnime(item) ? <ItemView item={item as Media} /> : <AnimeItemView item={item as Anime} />
+                return !isAniList(item as any) ? <ItemView item={item as Media} /> : <AniListItemView item={item as AniList} />
             }}
                 numColumns={2}
                 keyExtractor={(item) => item.id.toString()}
@@ -80,12 +81,12 @@ function HorizontalList({ data, name, link }: Props) {
             </View>
             <Divider style={{ marginVertical: 6, }} bold />
             <FlatList data={data} renderItem={({ item }) => {
-                return !isAnime(item) ? <ItemView item={item as Media} /> : <AnimeItemView item={item as Anime} />
+                return !isAniList(item as any) ? <ItemView item={item as Media} /> : <AniListItemView item={item as AniList} />
             }} keyExtractor={(item) => item.id.toString()} horizontal
                 decelerationRate="fast"
                 snapToInterval={POSTER_WIDTH + 10}
-                
-             />
+
+            />
         </>
     )
 }
@@ -163,6 +164,41 @@ function AnimeItemView({ item }: { item: Anime }) {
     );
 }
 
+function AniListItemView({ item }: { item: AniList }) {
+    console.log(item)
+    const { id, title, releaseDate: year, image: bannerImage, cover: coverImage, totalEpisodes: currentEpisode } = item
+
+    function _onPress() {
+        console.log(id, title.userPreferred)
+        router.push('anilist/' + id)
+    }
+
+    return (
+        <>
+            <Card style={{ margin: 5, flex: 1, width: POSTER_WIDTH }}>
+                <Pressable onLongPress={(e) => {
+                    console.log(item)
+                }} onPress={_onPress} >
+                    <Card.Cover style={styles.poster} source={{ uri: bannerImage ?? bannerImage}} />
+                </Pressable>
+
+                <Card.Content>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', paddingTop: 4 }}>
+
+                                <Text>{title.english ?? title.userPreferred} </Text>
+                            </View>
+                            <Text>{year} ({currentEpisode})</Text>
+                        </View>
+
+                    </View>
+                </Card.Content>
+            </Card>
+        </>
+    );
+}
+
 
 export function getYear(date: Date | undefined) {
     if (!date) return ''
@@ -171,4 +207,8 @@ export function getYear(date: Date | undefined) {
 
 export function isAnime(item: Media | Anime): item is Anime {
     return (item as Anime).slug !== undefined;
+}
+
+export function isAniList(item: Media | AniList): item is AniList {
+    return (item as AniList).media_type === 'anime'
 }

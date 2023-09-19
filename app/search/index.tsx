@@ -1,7 +1,7 @@
 import { StyleSheet, ScrollView, View, FlatList, Image } from 'react-native'
 import React from 'react'
 import { useLocalSearchParams, Stack, router } from 'expo-router'
-import { animeX, search, t } from '../../utils/constants'
+import { anilist, animeX, search, t } from '../../utils/constants'
 import { Media, Result } from '../../types/media'
 import { Anime, AnimeRes } from '../../types/anime'
 import { groupBy } from '../../utils/utils'
@@ -9,6 +9,7 @@ import { SegmentedButtons, Text, List, Button } from 'react-native-paper'
 import { theme } from '../../style/theme'
 import Loading from '../../components/Loading'
 import { getYear } from '../../components/Shared/List'
+import { AnilistRes } from '../../types/anilist'
 
 const Search = () => {
 
@@ -109,13 +110,13 @@ function SearchList({ data }: SProps) {
         <FlatList
           data={data}
           renderItem={({ item }) => {
-            const year = getYear(item.release_date ?? item.first_air_date ) ?? item.season ?? item.seasonYear ?? item.year
+            const year = getYear(item.release_date ?? item.first_air_date ?? item.releaseDate ) ?? item.season ?? item.seasonYear ?? item.year
             return (
             <List.Item style={{ paddingHorizontal: 10 }}
               key={item.id}
               title={`${item.title?.userPreferred ?? item.title?.english ?? item.title ?? item.name} (${year})`}
               description={item.overview ?? item.description}
-              left={props => <Image {...props} source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
+              left={props => <Image {...props} source={{ uri: item.coverImage ?? item.image ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
               onPress={() => {
                 router.push(item.media_type + '/' + (item.slug ?? item.id))
               }}
@@ -129,7 +130,7 @@ function SearchList({ data }: SProps) {
 
 async function fetchSearch(query: string, page: number = 1) {
   const tmdb = fetch(search.all(query, page))
-  const animex = fetch(animeX.search(query, page))
+  const animex = fetch(anilist.search(query, page))
   const [tmdbRes, animexRes] = await Promise.allSettled([tmdb, animex])
 
   let tmdbData: Result = {
@@ -139,16 +140,10 @@ async function fetchSearch(query: string, page: number = 1) {
     total_results: 0
   }
 
-  let animexData: AnimeRes = {
-    data: [],
-    meta: {
-      currentPage: 0,
-      lastPage: 0,
-      perPage: 0,
-      total: 0,
-      next: 0,
-      prev: null
-    }
+  let animexData: AnilistRes = {
+    currentPage: 0,
+    hasNextPage: false,
+    results: [],
   }
 
   if (tmdbRes.status === 'fulfilled' && tmdbRes.value?.ok) {
@@ -161,7 +156,7 @@ async function fetchSearch(query: string, page: number = 1) {
   }
 
   const { movie, tv, person } = groupBy(tmdbData.results, 'media_type') as { movie: Media[], tv: Media[], person: Media[] }
-  const anime = animexData.data?.map((a) => ({ ...a, media_type: 'anime' }));
+  const anime = animexData.results?.map((a) => ({ ...a, media_type: 'anilist' }));
 
   const tmdbFiltered = tmdbData.results.filter(v => v.poster_path !== null)
 
@@ -171,9 +166,9 @@ async function fetchSearch(query: string, page: number = 1) {
     person,
     anime,
     all: [...tmdbFiltered.filter(v => v.poster_path), ...anime],
-    total: tmdbData.total_results + animexData.meta.total,
-    show: tmdbFiltered.length + animexData.data.length,
-    pages: Math.max(tmdbData.total_pages, animexData.meta.lastPage)
+    total: tmdbData.total_results + animexData.results.length,
+    show: tmdbFiltered.length + animexData.results.length,
+    pages: Math.max(tmdbData.total_pages, animexData.currentPage +  +(animexData.hasNextPage))
   }
 }
 

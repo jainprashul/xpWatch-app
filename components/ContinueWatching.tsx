@@ -17,6 +17,7 @@ const ContinueWatching = () => {
             <FlatList
                 data={data}
                 renderItem={({ item }) => {
+                    console.log("itemx",item.type)
                     return <Card style={{ margin: 5, width: POSTER_WIDTH }} onPress={() => {
                         router.push(item.type + '/' + item.id)
                     }}
@@ -26,7 +27,7 @@ const ContinueWatching = () => {
                             dispatch(myListActions.removeWatchHistory(item.slug ?? item.id))
                         }}
                     >
-                        <Card.Cover style={styles.poster} source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w500${item.poster_path}` }} />
+                        <Card.Cover style={styles.poster} source={{ uri: item.coverImage ?? item.image ?? `https://image.tmdb.org/t/p/w500${item.poster_path}` }} />
                         <Card.Content>
                             <Text variant='labelLarge' >{item.title?.english ?? item.title ?? item.name}</Text>
                             {/* <Text variant='bodySmall' >{item.overview ?? }</Text> */}

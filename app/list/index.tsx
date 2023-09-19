@@ -5,6 +5,7 @@ import { BottomNavigation, List, Searchbar, Text } from 'react-native-paper'
 import { myListActions, selectAnime, selectRecents, selectMovie, selectTV, selectWatchedAlready } from '../../store/context/myListSlice';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import { Stack, router } from 'expo-router';
+import { AniListDetail } from '../../types/anilistDetails';
 
 
 const list = () => {
@@ -116,7 +117,7 @@ function TvList() {
 }
 
 function AnimeList() {
-    const data = useAppSelector(selectAnime)
+    const data = useAppSelector(selectAnime) as AniListDetail[]
 
     return (
         <ScrollView>
@@ -130,10 +131,10 @@ function AnimeList() {
                             key={item.id}
                             title={item.title.english ?? item.title.userPreferred}
                             description={item.description}
-                            left={props => <Image {...props} source={{ uri: `${item.coverImage}` }} style={{ width: 50, height: 75 }} />}
+                            left={props => <Image {...props} source={{ uri: `${item.image }` }} style={{ width: 50, height: 75 }} />}
                             //   right={props => <List.Icon {...props} icon="dots-vertical" />}
                             onPress={() => {
-                                router.push('anime/' + item.id)
+                                router.push('anilist/' + item.id)
                             }}
                         />
                     )}

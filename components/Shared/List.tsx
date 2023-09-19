@@ -165,7 +165,6 @@ function AnimeItemView({ item }: { item: Anime }) {
 }
 
 function AniListItemView({ item }: { item: AniList }) {
-    console.log(item)
     const { id, title, releaseDate: year, image: bannerImage, cover: coverImage, totalEpisodes: currentEpisode } = item
 
     function _onPress() {

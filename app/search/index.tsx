@@ -130,22 +130,49 @@ function SearchList({ data }: SProps) {
 async function fetchSearch(query: string, page: number = 1) {
   const tmdb = fetch(search.all(query, page))
   const animex = fetch(animeX.search(query, page))
-  const [tmdbRes, animexRes] = await Promise.all([tmdb, animex])
-  const tmdbData = await (await tmdbRes.json()) as Result
-  const animexData = await (await animexRes.json()) as AnimeRes
+  const [tmdbRes, animexRes] = await Promise.allSettled([tmdb, animex])
 
+  let tmdbData: Result = {
+    page: 0,
+    results: [],
+    total_pages: 0,
+    total_results: 0
+  }
+
+  let animexData: AnimeRes = {
+    data: [],
+    meta: {
+      currentPage: 0,
+      lastPage: 0,
+      perPage: 0,
+      total: 0,
+      next: 0,
+      prev: null
+    }
+  }
+
+  if (tmdbRes.status === 'fulfilled' && tmdbRes.value?.ok) {
+    tmdbData = await tmdbRes.value.json() 
+  }
+
+  if (animexRes.status === 'fulfilled' && animexRes.value?.ok) {
+    animexData = await animexRes.value?.json()
+    // console.log(animexData)
+  }
 
   const { movie, tv, person } = groupBy(tmdbData.results, 'media_type') as { movie: Media[], tv: Media[], person: Media[] }
   const anime = animexData.data?.map((a) => ({ ...a, media_type: 'anime' }));
+
+  const tmdbFiltered = tmdbData.results.filter(v => v.poster_path !== null)
 
   return {
     movie,
     tv,
     person,
     anime,
-    all: [...tmdbData.results, ...anime],
+    all: [...tmdbFiltered.filter(v => v.poster_path), ...anime],
     total: tmdbData.total_results + animexData.meta.total,
-    show: tmdbData.results.length + animexData.data.length,
+    show: tmdbFiltered.length + animexData.data.length,
     pages: Math.max(tmdbData.total_pages, animexData.meta.lastPage)
   }
 }

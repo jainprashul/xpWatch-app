@@ -86,16 +86,23 @@ export const fetchTrending = createAsyncThunk("home/fetchTrending", async () => 
         const all = fetch(trending.all);
         const movies = fetch(trending.today.movies);
         const tv = fetch(trending.today.tv);
-        const anime = fetch(animeX.popular(1));
+        // const anime = fetch(animeX.popular(1));
         const bollywood = fetch(hindi.recentMovie(1));
-        const data = await Promise.all([all, movies, tv, anime, bollywood]);
+        const data = await Promise.allSettled([all, movies, tv,  bollywood]);
 
-        const res = await Promise.all(data.map((res) => res.json()));
+        
+
+        const res = await Promise.all(data.map((res) => {
+            if (res.status === "fulfilled") {
+                return res.value.json();
+            }
+            return null;
+        }));
         return {
             all: res[0].results,
             movies: res[1].results,
             tv: res[2].results,
-            anime: res[3].data,
+            anime: res[3]?.data ?? [],
             bollywood: res[4].results.map((movie: any) => ({ ...movie, media_type: "movie" })),
         }
     } catch (error) {

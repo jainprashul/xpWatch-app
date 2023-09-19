@@ -27,7 +27,7 @@ type Props = {
 }
 
 const List = ({ data, name, horizontal, link }: Props) => {
-    if (data.length === 0) return null;
+    if (data?.length === 0) return null;
     if (horizontal) return <HorizontalList data={data} name={name} link={link} />
     return (
         <>
@@ -61,7 +61,7 @@ const List = ({ data, name, horizontal, link }: Props) => {
 export default List
 
 function HorizontalList({ data, name, link }: Props) {
-    if (data.length === 0) return null;
+    if (data?.length === 0) return null;
     return (
         <>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>

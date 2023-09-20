@@ -16,6 +16,7 @@ import { has, myListActions, selectHistoryByID } from '../../store/context/myLis
 import { MaterialIcons } from '@expo/vector-icons';
 import analytics from '@react-native-firebase/analytics'
 import Ratings from '../../components/Ratings'
+import { Episode } from '../../types/seasonDetail'
 
 
 const TvPage = () => {
@@ -46,6 +47,7 @@ const TvPage = () => {
 
     const [loading1, setLoading1] = React.useState(true)
     const [loading2, setLoading2] = React.useState(true)
+    const [sort, setSort] = React.useState(1)
 
 
     useEffect(() => {
@@ -145,9 +147,15 @@ const TvPage = () => {
 
             <List.Section>
                 <List.Accordion expanded
+                 onPress={() => {
+                    setSort(-sort)
+                }}
+                right={() => <Text>
+                    Sort {sort === 1 ? 'ASC' : 'DESC'}
+                </Text>}
                     title="Episodes">
                     <FlatList
-                        data={season?.episodes}
+                        data={JSON.parse(JSON.stringify(season?.episodes)).sort((a : Episode, b : Episode) => sort * (a.episode_number - b.episode_number))}
                         renderItem={({ item: v }) => (<List.Item
                             key={v.id}
                             title={`${v.episode_number}. ${v.name}`}

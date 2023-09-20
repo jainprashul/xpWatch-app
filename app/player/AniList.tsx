@@ -10,6 +10,7 @@ import { getAniEpisodeSources, getEpisodeSources } from '../../utils/db'
 import analytics from '@react-native-firebase/analytics'
 import { AniList } from '../../types/anilist'
 import { EpisodeAni } from '../../types/anilistDetails'
+import { myListActions } from '../../store/context/myListSlice'
 
 type Props = {
     data: AniList
@@ -19,6 +20,7 @@ type Props = {
 const AniListWatch = ({ data, srcs }: Props) => {
     const dispatch = useAppDispatch()
     const src = useAppSelector((state) => state.player.src)
+    const [sort, setSort] = React.useState(1)
     useEffect(() => {
         if (srcs.length === 0) {
             console.log('no srcs')
@@ -44,6 +46,14 @@ const AniListWatch = ({ data, srcs }: Props) => {
                     return
                 }
                 dispatch(playerAction.setSrc(srcs[0].url))
+                setTimeout(() => {
+                    console.log('add to history')
+                    dispatch(myListActions.addToHistory({
+                        id: data.id.toString(),
+                        e : episode,
+                        s : 0,
+                    }))
+                }, 3000);
                 analytics().logEvent('playing', {
                     content_type: 'anime',
                     item_id: data?.id,
@@ -80,9 +90,15 @@ const AniListWatch = ({ data, srcs }: Props) => {
             <ScrollView>
                 <List.Section>
                     <List.Accordion expanded
+                         onPress={() => {
+                            setSort(-sort)
+                        }}
+                        right={() => <Text>
+                            Sort {sort === 1 ? 'ASC' : 'DESC'}
+                        </Text>}
                         title="Episodes">
                         <FlatList
-                            data={episodes}
+                            data={JSON.parse(JSON.stringify(episodes)).sort((a : any, b : any) => { return sort * (a.number - b.number) })}
                             renderItem={({ item: v }) => (<List.Item
                                 key={v.id}
                                 title={`${v.number}. ${v.title ?? 'Episode ' + v.number}`}

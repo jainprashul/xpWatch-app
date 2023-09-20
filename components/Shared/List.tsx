@@ -165,7 +165,7 @@ function AnimeItemView({ item }: { item: Anime }) {
 }
 
 function AniListItemView({ item }: { item: AniList }) {
-    const { id, title, releaseDate: year, image: bannerImage, cover: coverImage, totalEpisodes: currentEpisode } = item
+    const { id, title, releaseDate: year, image: bannerImage,  totalEpisodes: currentEpisode } = item
 
     function _onPress() {
         console.log(id, title.userPreferred)

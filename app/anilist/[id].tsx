@@ -32,6 +32,8 @@ const AniListDetail = () => {
     useEffect(() => {
         if (history) {
             dispatch(animeActions.setEpisode(history.e))
+        } else {
+            dispatch(animeActions.setEpisode(1))
         }
     }, [history])
 
@@ -71,7 +73,7 @@ const AniListDetail = () => {
         </>
     }
 
-    const play = (id : string) => {
+    const play = (id: string) => {
 
         console.log(id)
         setLoading1(true)
@@ -91,21 +93,21 @@ const AniListDetail = () => {
     function AddtoFavorite() {
         if (result)
             dispatch(myListActions.addAnime(result))
-            analytics().logEvent('add_to_favorite', {
-                content_type: 'anime',
-                item_id: result?.id,
-                title : result?.title
-            });
+        analytics().logEvent('add_to_favorite', {
+            content_type: 'anime',
+            item_id: result?.id,
+            title: result?.title
+        });
     }
 
     function RemoveFromFavorite() {
         if (result)
             dispatch(myListActions.removeAnime(result.id.toString()))
-            analytics().logEvent('remove_from_favorite', {
-                content_type: 'anime',
-                item_id: result?.id,
-                title : result?.title
-            });
+        analytics().logEvent('remove_from_favorite', {
+            content_type: 'anime',
+            item_id: result?.id,
+            title: result?.title
+        });
 
     }
 
@@ -115,21 +117,21 @@ const AniListDetail = () => {
                 ...result,
                 type: 'anime'
             }))
-            analytics().logEvent('add_to_watched', {
-                content_type: 'anime',
-                item_id: result?.id,
-                title : result?.title
-            });
+        analytics().logEvent('add_to_watched', {
+            content_type: 'anime',
+            item_id: result?.id,
+            title: result?.title
+        });
     }
 
     function RemoveFromWatched() {
         if (result)
             dispatch(myListActions.removeWatchedAlready(result.id.toString()))
-            analytics().logEvent('remove_from_watched', {
-                content_type: 'anime',
-                item_id: result?.id,
-                title : result?.title
-            });
+        analytics().logEvent('remove_from_watched', {
+            content_type: 'anime',
+            item_id: result?.id,
+            title: result?.title
+        });
     }
 
 
@@ -143,15 +145,14 @@ const AniListDetail = () => {
                     onPress={() => {
                         setSort(-sort)
                     }}
-                    right={()=><View style={{ flexDirection: 'row', flexWrap: 'wrap', marginVertical: 10 }}>
-                    <Text>
+                    right={() => <Text>
                         Sort {sort === 1 ? 'ASC' : 'DESC'}
-                        </Text>
-                </View>}
+                    </Text>}
                     title={`${episodes?.length} Episodes`}>
-                    
+
                     <FlatList
                         data={episodes?.sort((a, b) => sort * (a.number - b.number))}
+                    
                         renderItem={({ item: v }) => (<List.Item
                             key={v.id}
                             title={`${v.number}. ${v.title ?? "Episode " + v.number}`}
@@ -182,7 +183,7 @@ const AniListDetail = () => {
                 height: height - 110,
             }}>
                 <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: "rgba(0,0,0,.6)", padding: 10 }}>
-                    <Image source={{ uri: result.cover }} style={{ width: 200, height: 300, resizeMode: 'cover', borderRadius: 5, }} />
+                    <Image source={{ uri: result.image }} style={{ width: 200, height: 300, resizeMode: 'cover', borderRadius: 5, }} />
 
                     <View style={{ marginVertical: 10, overflow: 'hidden', flexDirection: 'row', justifyContent: "space-around", alignItems: "center" }}>
 
@@ -245,7 +246,7 @@ const AniListDetail = () => {
                         return <Card style={{ margin: 5, width: POSTER_WIDTH, }} onPress={() => {
                             router.push('anilist/' + movie.id)
                         }} >
-                            <Card.Cover  style={styles.poster} source={{ uri: movie.image }} />
+                            <Card.Cover style={styles.poster} source={{ uri: movie.image }} />
                             <Card.Content>
                                 <Text variant='bodySmall' >{movie.title.english ?? movie.title.userPreferred}</Text>
                                 <Text variant='bodySmall' >{movie.type}</Text>
@@ -261,7 +262,7 @@ const AniListDetail = () => {
                         return <Card style={{ margin: 5, width: POSTER_WIDTH, }} onPress={() => {
                             router.push('anilist/' + movie.id)
                         }} >
-                            <Card.Cover  style={styles.poster} source={{ uri: movie.image }} />
+                            <Card.Cover style={styles.poster} source={{ uri: movie.image }} />
                             <Card.Content>
                                 <Text variant='bodySmall' >{movie.title.english ?? movie.title.userPreferred}</Text>
                                 <Text variant='bodySmall' >{movie.type}</Text>

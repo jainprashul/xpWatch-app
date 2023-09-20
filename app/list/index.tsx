@@ -159,7 +159,7 @@ function WatchedAlready() {
                             key={item.id}
                             title={item.title?.english ?? item.title ?? item.name}
                             description={item.overview ?? item.description}
-                            left={props => <Image {...props} source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
+                            left={props => <Image {...props} source={{ uri: item.coverImage ??  item.image ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
                             //   right={props => <List.Icon {...props} icon="dots-vertical" />}
                             onPress={() => {
                                 router.push(item.type + '/' + item.id)
@@ -187,7 +187,7 @@ function Recents() {
                             key={item.id}
                             title={item.title?.english ?? item.title ?? item.name}
                             description={item.overview ?? item.description}
-                            left={props => <Image {...props} source={{ uri: item.coverImage ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
+                            left={props => <Image {...props} source={{ uri: item.coverImage ?? item.image ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
                             //   right={props => <List.Icon {...props} icon="dots-vertical" />}
                             onPress={() => {
                                 router.push(item.type + '/' + item.id)
@@ -201,3 +201,6 @@ function Recents() {
 
 }
 
+function isAniList(item: any): item is AniListDetail {
+    return Boolean(!item.slug)
+}

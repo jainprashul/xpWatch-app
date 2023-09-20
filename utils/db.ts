@@ -49,11 +49,8 @@ export const getAnilistDetails = async (id : string) => {
     try {
         const res = await (await fetch(anilist.anime(id))).json() as AniListDetail;
         const { episodes, relations: similar, recommendations  } = res;
-        delete res.episodes;
-        delete res.relations;
-        delete res.recommendations;
 
-        const similars = similar?.map(item => ({ ...item, media_type: 'anime', type: item.type }));
+        const similars = similar?.map(item => ({ ...item, media_type: 'anime', type: item.type })).filter((item : any) => item.type !== 'MANGA');
         const recommandations = recommendations?.map(item => ({ ...item, media_type: 'anime' }))
 
         return {

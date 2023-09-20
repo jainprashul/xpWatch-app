@@ -17,7 +17,6 @@ const ContinueWatching = () => {
             <FlatList
                 data={data}
                 renderItem={({ item }) => {
-                    console.log("itemx",item.type)
                     return <Card style={{ margin: 5, width: POSTER_WIDTH }} onPress={() => {
                         router.push(item.type + '/' + item.id)
                     }}

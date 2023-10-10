@@ -1,5 +1,5 @@
-import { StyleSheet, View } from 'react-native'
-import React from 'react'
+import { LogBox, StyleSheet, View } from 'react-native'
+import React, { useEffect } from 'react'
 import { WebView } from 'react-native-webview';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { theme } from '../../style/theme';
@@ -12,6 +12,7 @@ import Anime from './Anime';
 import { useKeepAwake } from 'expo-keep-awake';
 import { RecommandationView } from '../../components/OverviewDetails';
 import AniList from './AniList';
+import { Text } from 'react-native-paper';
 
 
 
@@ -23,6 +24,9 @@ const Player = () => {
     const srcs = JSON.parse(sources as string)
     const data = JSON.parse(result as string)
     const recommandationsData = JSON.parse((recommandations ?? "[]") as string)
+    useEffect(() => {
+        LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+    }, [])
 
     const XView = ({ type }: { type: string }) => {
         switch (type) {
@@ -85,6 +89,13 @@ function Video(
 
     const src = useAppSelector((state) => state.player.src)
 
+    console.log("src ,", src)
+
+    if (!src) {
+        return <View style={styles.video}>
+            <Text> Something Went Wrong </Text>
+        </View>
+    }
 
     return <View style={styles.video}>
         <WebView
@@ -116,8 +127,11 @@ export function Embed(
     }
 ) {
     const video = React.useRef<WebView>(null);
-
     const src = source
+
+    if (!src) {
+        return null
+    }
 
     return <View style={styles.video}>
         <WebView

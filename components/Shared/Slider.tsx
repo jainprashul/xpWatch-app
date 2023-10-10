@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Dimensions, Image, ImageBackground, TouchableOp
 import React from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import { router } from 'expo-router'
-import { MediaMini } from '../../types/MediaMeta'
+import { MediaMini } from '../../types/meta/MediaMeta'
 
 const { width } = Dimensions.get('window')
 const ITEM_WIDTH = width 

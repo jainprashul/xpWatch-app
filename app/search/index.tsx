@@ -9,7 +9,7 @@ import { theme } from '../../style/theme'
 import Loading from '../../components/Loading'
 import { AnilistRes } from '../../types/anilist'
 import { AniList_to_MediaMini, TMDB_to_MediaMini } from '../../utils/converter'
-import { MediaMini } from '../../types/MediaMeta'
+import { MediaMini } from '../../types/meta/MediaMeta'
 
 const Search = () => {
 

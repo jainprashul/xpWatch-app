@@ -5,7 +5,7 @@ import { TV } from "../../types/tv";
 import { Movie } from "../../types/movie";
 import { AniList } from "../../types/anilist";
 import { AniList_to_MediaMini, TMDB_to_MediaMini } from "../../utils/converter";
-import { MediaMini } from "../../types/MediaMeta";
+import { MediaMini } from "../../types/meta/MediaMeta";
 
 type initState = {
     name: string;

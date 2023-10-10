@@ -21,6 +21,9 @@ const AniListWatch = ({ data, srcs }: Props) => {
     const dispatch = useAppDispatch()
     const src = useAppSelector((state) => state.player.src)
     const [sort, setSort] = React.useState(1)
+
+    
+    console.log("recommandationsData", srcs)
     useEffect(() => {
         if (srcs.length === 0) {
             console.log('no srcs')
@@ -40,7 +43,9 @@ const AniListWatch = ({ data, srcs }: Props) => {
     useEffect(() => {
         if (currentEp) {
             (async () => {
+                console.log('get srcs', currentEp.id)
                 const srcs = await getAniEpisodeSources(currentEp?.id)
+                console.log('fetccvhsrcs', srcs)
                 if (srcs.length === 0) {
                     console.log('no srcs')
                     return

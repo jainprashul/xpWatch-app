@@ -5,7 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import Loading from '../Loading';
 import { theme } from '../../style/theme';
-import { MediaMini } from '../../types/MediaMeta';
+import { MediaMini } from '../../types/meta/MediaMeta';
 
 export const POSTER_WIDTH = 180
 export const POSTER_HEIGHT = 270

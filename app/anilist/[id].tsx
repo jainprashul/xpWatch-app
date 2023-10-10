@@ -79,6 +79,7 @@ const AniListDetail = () => {
         setLoading1(true)
         getAniEpisodeSources(id).then((res) => {
             setLoading1(false)
+            console.log( "TRE", res)
             router.push({
                 pathname: 'player',
                 params: {

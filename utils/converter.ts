@@ -1,4 +1,4 @@
-import { MediaMini } from "../types/MediaMeta";
+import { MediaMini } from "../types/meta/MediaMeta";
 import { AniList } from "../types/anilist";
 import { Media } from "../types/media";
 import { RecommendationsResult } from "../types/movieDetail";

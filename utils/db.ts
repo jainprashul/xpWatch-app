@@ -68,7 +68,27 @@ export type AnilistX = Awaited<ReturnType<typeof getAnilistDetails>>;
 
 export const getAniEpisodeSources = async (id : string) => {
    try {
+    console.log(anilist.watchEpisode(id))
+
     const res = await fetch(anilist.watchEpisode(id))
+    console.log("Res", res)
+    if (!res.ok) {
+        const res = await fetch(anilist.watchEpisode2(id))
+        console.log(anilist.watchEpisode2(id))
+        if (!res.ok) {
+            throw new Error('Not Found')
+        }
+        const links = await res.json();
+        const watchLinks = [{
+            server: 'AnimeX',
+            quality: 'HD',
+            title: 'Watch on AnimeX',
+            url: links.headers.Referer,
+            type: 'embed',
+            videoSrc: links.headers.Referer,
+        }]
+        return watchLinks;
+    }
     const links = await res.json();
     
     console.log(anilist.watchEpisode(id), links)
@@ -82,17 +102,7 @@ export const getAniEpisodeSources = async (id : string) => {
     }))
     return watchLinks;
    } catch (error) {
-    const res = await fetch(anilist.watchEpisode2(id))
-    const links = await res.json();
-    const watchLinks = [{
-        server: 'AnimeX',
-        quality: 'HD',
-        title: 'Watch on AnimeX',
-        url: links.headers.Referer,
-        type: 'embed',
-        videoSrc: links.headers.Referer,
-    }]
-    return watchLinks;
+    console.error("ERROR FETCH",error)
    }
 }
 

@@ -3,18 +3,18 @@ import { animeX, genre, hindi, trending, movie, tv, anilist } from "../../utils/
 import { Media } from "../../types/media";
 import { TV } from "../../types/tv";
 import { Movie } from "../../types/movie";
-import { Anime } from "../../types/anime";
 import { AniList } from "../../types/anilist";
+import { AniList_to_MediaMini, TMDB_to_MediaMini } from "../../utils/converter";
+import { MediaMini } from "../../types/MediaMeta";
 
 type initState = {
     name: string;
-    data: any[];
     trending: {
-        movies: Array<Movie>;
-        tv: Array<TV>;
-        all: Array<Media>;
-        anime: Array<AniList>;
-        bollywood: Array<Movie>;
+        movies: MediaMini[];
+        tv: MediaMini[];
+        all: MediaMini[];
+        anime: MediaMini[];
+        bollywood: MediaMini[];
     },
     discover: {
         movies: Array<Movie>;
@@ -23,22 +23,22 @@ type initState = {
         anime: Array<AniList>;
     },
     movies: {
-        popular: Array<Movie>;
-        topRated: Array<Movie>;
+        popular: MediaMini[];
+        topRated: MediaMini[];
         genres: Array<{
             id: number;
             name: string;
-            results: Array<Movie>;
+            results: MediaMini[];
         }>;
         lastRefreshed: number;
     },
     tv: {
-        popular: Array<TV>;
-        topRated: Array<TV>;
+        popular: MediaMini[];
+        topRated: MediaMini[];
         genres: Array<{
             id: number;
             name: string;
-            results: Array<TV>;
+            results: MediaMini[];
         }>;
         lastRefreshed: number;
     },
@@ -51,7 +51,6 @@ type initState = {
 
 const initialState: initState = {
     name: "Home",
-    data: [],
     trending: {
         movies: [],
         tv: [],
@@ -100,11 +99,11 @@ export const fetchTrending = createAsyncThunk("home/fetchTrending", async () => 
             return null;
         }));
         return {
-            all: res[0].results,
-            movies: res[1].results,
-            tv: res[2].results,
-            bollywood: res[3].results.map((movie: any) => ({ ...movie, media_type: "movie" })),
-            anime: res[4]?.results.map((anime: any) => ({ ...anime, media_type: "anime" })),
+            all: res[0].results.map((item : Media) => (TMDB_to_MediaMini(item))),
+            movies: res[1].results.map((item : Media) => (TMDB_to_MediaMini(item))),
+            tv: res[2].results.map((item : Media) => (TMDB_to_MediaMini(item))),
+            bollywood: res[3].results.map((movie: any) => (TMDB_to_MediaMini({ ...movie, media_type: "movie" }))),
+            anime: res[4]?.results.map((anime: any) => (AniList_to_MediaMini(anime))),
         }
     } catch (error) {
         console.log(error);
@@ -141,10 +140,10 @@ export const fetchMovies = createAsyncThunk("home/fetchMovies", async (page: num
         const res = await Promise.all(data.map((res) => res.json()));
 
         return {
-            popular: res[0].results.map((movie: any) => ({ ...movie, media_type: "movie" })),
-            topRated: res[1].results.map((movie: any) => ({ ...movie, media_type: "movie" })),
+            popular: res[0].results.map((movie: any) => (TMDB_to_MediaMini({ ...movie, media_type: "movie" }))),
+            topRated: res[1].results.map((movie: any) => (TMDB_to_MediaMini({ ...movie, media_type: "movie" }))),
             genres: res.slice(2).map((genre, i) => ({
-                results: genre.results.map((movie: any) => ({ ...movie, media_type: "movie" })),
+                results: genre.results.map((movie: any) => (TMDB_to_MediaMini({ ...movie, media_type: "movie" }))),
                 id: genresList.genres[i].id, name: genresList.genres[i].name
             })),
         }
@@ -172,10 +171,10 @@ export const fetchTV = createAsyncThunk("home/fetchTV", async (page: number) => 
         const res = await Promise.all(data.map((res) => res.json()));
 
         return {
-            popular: res[0].results.map((tv: any) => ({ ...tv, media_type: "tv" })),
-            topRated: res[1].results.map((tv: any) => ({ ...tv, media_type: "tv" })),
+            popular: res[0].results.map((tv: any) => (TMDB_to_MediaMini({ ...tv, media_type: "tv" }))),
+            topRated: res[1].results.map((tv: any) => (TMDB_to_MediaMini({ ...tv, media_type: "tv" }))),
             genres: res.slice(2).map((genre, i) => ({ 
-                results: genre.results.map((tv: any) => ({ ...tv, media_type: "tv" })),
+                results: genre.results.map((tv: any) => (TMDB_to_MediaMini({ ...tv, media_type: "tv" }))),
                 id: genresList.genres[i].id, name: genresList.genres[i].name })),
         }
     } catch (error) {
@@ -194,6 +193,35 @@ export const homeSlice = createSlice({
         },
         setLastRefreshed: (state, action: PayloadAction<number>) => {
             state.lastRefreshed = action.payload;
+        },
+        clearAll: (state) => {
+            state.trending = {
+                movies: [],
+                tv: [],
+                all: [],
+                anime: [],
+                bollywood: [],
+            };
+            state.discover = {
+                movies: [],
+                tv: [],
+                all: [],
+                anime: [],
+            };
+            state.movies = {
+                popular: [],
+                topRated: [],
+                genres: [],
+                lastRefreshed: 0,
+            };
+            state.tv = {
+                popular: [],
+                topRated: [],
+                genres: [],
+                lastRefreshed: 0,
+            };
+            state.lastRefreshed = 0;
+            state.genre = [];
         },
     },
     extraReducers: (builder) => {

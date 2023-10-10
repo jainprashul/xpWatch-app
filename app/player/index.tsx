@@ -16,10 +16,9 @@ import AniList from './AniList';
 
 
 const Player = () => {
-    const dispatch = useAppDispatch()
 
     useKeepAwake();
-    
+
     const { sources, type, result, recommandations } = useLocalSearchParams()
     const srcs = JSON.parse(sources as string)
     const data = JSON.parse(result as string)
@@ -50,7 +49,7 @@ const Player = () => {
             }}>Reload</Button> */}
 
             <XView type={type as string} />
-            
+
             <View style={{ height: 20 }} />
             <RecommandationView result={recommandationsData} text='Recommandations' />
 
@@ -78,6 +77,7 @@ function Video(
     { data, type }: {
         data: any,
         type: string,
+        source?: string,
     }
 ) {
     const video = React.useRef<WebView>(null);
@@ -104,6 +104,28 @@ function Video(
                 }, 5000);
 
             }}
+            source={{
+                uri: src,
+            }} />
+    </View>
+}
+
+export function Embed(
+    { source }: {
+        source: string,
+    }
+) {
+    const video = React.useRef<WebView>(null);
+
+    const src = source
+
+    return <View style={styles.video}>
+        <WebView
+            ref={video}
+            allowsFullscreenVideo={true}
+            allowsInlineMediaPlayback={true}
+            mediaPlaybackRequiresUserAction={false}
+            mediaCapturePermissionGrantType='grant'
             source={{
                 uri: src,
             }} />

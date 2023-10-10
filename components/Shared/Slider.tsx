@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Dimensions, Image, ImageBackground, TouchableOp
 import React from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import { router } from 'expo-router'
+import { MediaMini } from '../../types/MediaMeta'
 
 const { width } = Dimensions.get('window')
 const ITEM_WIDTH = width 
@@ -9,7 +10,7 @@ const ITEM_HEIGHT = ITEM_WIDTH * 1.4
 const SPACING = 0
 
 type Props = {
-    data: Array<any>
+    data: MediaMini[]
 }
 const Slider = ({data}: Props) => {
   const isCarousel = React.useRef<FlatList>(null)
@@ -54,7 +55,7 @@ const Slider = ({data}: Props) => {
 export default Slider
 
 type BannerCardProps = {
-    item: any
+    item: MediaMini
 }
 
 function BannerCard({ item }: BannerCardProps) {
@@ -65,9 +66,8 @@ function BannerCard({ item }: BannerCardProps) {
                 
         }}>
         <ImageBackground style={styles.card} source={{
-            uri: `https://image.tmdb.org/t/p/w780${item.poster_path}`
-        }}>
-            
+            uri: item.poster
+        }}>   
         </ImageBackground>
         </TouchableHighlight>
     )
@@ -85,7 +85,5 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       borderRadius: 20,
       margin: SPACING,
-      // backgroundColor: generateRandomColor(),
-      
     },
 })

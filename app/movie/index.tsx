@@ -68,9 +68,9 @@ const Movie = () => {
                 flex: 1,
                 padding: 10,
             }}>
-                <List data={trending as any[]} name='Trending' horizontal />
-                <List data={data.popular as any[]} name='Popular' horizontal />
-                <List data={data.topRated as any[]} name='Top Rated' horizontal />
+                <List data={trending} name='Trending' horizontal />
+                <List data={data.popular} name='Popular' horizontal />
+                <List data={data.topRated} name='Top Rated' horizontal />
                 {
                     data.genres.map((item) => {
                         return <List data={item.results as any[]} name={item.name} horizontal />

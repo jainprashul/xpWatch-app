@@ -5,13 +5,13 @@ export interface AnimeDetail {
     coverImage:        string;
     bannerImage:       string;
     status:            string;
-    season:            Season;
+    season:            string;
     title:             Title;
     mappings:          Mappings;
     currentEpisode:    number;
     next:              Date;
     synonyms:          string[];
-    countryOfOrigin:   CountryOfOrigin;
+    countryOfOrigin:   string;
     lastEpisodeUpdate: Date;
     seasonInt:         number;
     description:       string;
@@ -29,9 +29,6 @@ export interface AnimeDetail {
     relations?:         Relation[];
 }
 
-export enum CountryOfOrigin {
-    Jp = "JP",
-}
 
 export interface Episode {
     id:              string;
@@ -42,7 +39,7 @@ export interface Episode {
     image:           string;
     createdAt:       Date;
     airedAt:         string;
-    sources:         Source[];
+    sources?:         Source[];
 }
 
 export interface Source {
@@ -84,13 +81,13 @@ export interface Anime {
     coverImage:        string;
     bannerImage:       null | string;
     status:            Status;
-    season:            Season;
+    season:            string;
     title:             Title;
     mappings:          Mappings;
     currentEpisode:    number;
     next:              null;
     synonyms:          string[];
-    countryOfOrigin:   CountryOfOrigin;
+    countryOfOrigin:   string;
     lastEpisodeUpdate: Date | null;
     seasonInt:         number | null;
     description:       null | string;
@@ -112,13 +109,7 @@ export enum Format {
     Unknown = "UNKNOWN",
 }
 
-export enum Season {
-    Fall = "FALL",
-    Spring = "SPRING",
-    Summer = "SUMMER",
-    Unknown = "UNKNOWN",
-    Winter = "WINTER",
-}
+
 
 export enum Status {
     Finished = "FINISHED",

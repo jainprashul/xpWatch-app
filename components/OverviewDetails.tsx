@@ -7,6 +7,7 @@ import { Cast, MovieDetail, RecommendationsResult } from '../types/movieDetail';
 import { TVDetails } from '../types/tvDetails';
 import { MaterialIcons } from '@expo/vector-icons';
 import { POSTER_HEIGHT, POSTER_WIDTH } from './Shared/List';
+import { Embed } from '../app/player';
 
 
 type Props = {
@@ -22,7 +23,7 @@ const OverviewDetails = ({ result, cast, recommandations, similars , seasons}: P
         <View style={{ padding: 10 }}>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginVertical: 10 }}>
                 {result?.genres?.map((genre) => {
-                    return <Chip mode='outlined' style={{ margin: 2 }}>{genre.name}</Chip>
+                    return <Chip key={genre.id} mode='outlined' style={{ margin: 2 }}>{genre.name}</Chip>
                 })}
             </View>
             <Text variant='bodySmall' style={{
@@ -30,7 +31,26 @@ const OverviewDetails = ({ result, cast, recommandations, similars , seasons}: P
             }} >{result?.overview}</Text>
             {seasons}
 
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginVertical: 10 }}></View>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginVertical: 10 }}>
+                {/* <FlatList
+                    horizontal
+                    data={result?.videos.results ?? []}
+                    renderItem={({ item }) => {
+                        return <Card style={{ margin: 5, width: POSTER_HEIGHT }} onPress={() => {
+            
+                        }} >
+                            <Embed source={`https://www.youtube.com/embed/${item.key}`} />
+                            <Card.Content>
+
+                                <Text variant='labelLarge' >{item.name}</Text>
+                            </Card.Content>
+                        </Card>
+                    }}
+                    keyExtractor={(item) => item.id.toString()}
+                /> */}
+
+            </View>
+
             <Text variant='labelLarge' >Cast</Text>
             <Divider style={{ marginVertical: 6, }} bold />
             <FlatList
@@ -50,6 +70,8 @@ const OverviewDetails = ({ result, cast, recommandations, similars , seasons}: P
                 keyExtractor={(item) => item.id.toString()}
                 horizontal
             />
+            
+
             <RecommandationView result={recommandations ?? []} text='Recommandations' />
             <RecommandationView result={similars ?? []} text='Similars' />
 
@@ -86,8 +108,7 @@ export function RecommandationView({ result, text, size=POSTER_WIDTH }: SProps) 
                     }} >
                         <Card.Cover style={styles.poster} source={{ uri: `https://image.tmdb.org/t/p/w342${item.poster_path}` }} />
                         <Card.Content>
-
-                            <Text style={{marginTop : 4}} variant='labelLarge' ><MaterialIcons style={{ padding : 4 }} name={item.media_type} size={20} color={'white'} /> {item.title ?? item.name}</Text>
+                            <Text style={{marginTop : 4}} variant='labelLarge' ><MaterialIcons style={{ padding : 4 }} name={item.media_type as any} size={20} color={'white'} /> {item.title ?? item.name}</Text>
                         </Card.Content>
                     </Card>
                 }}

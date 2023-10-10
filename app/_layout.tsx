@@ -11,9 +11,24 @@ import { useAppStart } from '../components/useAppStart';
 import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
 import { useState } from 'react';
+import { useAppDispatch } from '../store/hooks';
+import { homeActions } from '../store/context/homeSlice';
 
 export default function Layout() {
 
+  return (
+    <>
+      <Provider store={store}>
+        <PersistGate loading={<Loading />} persistor={persistor} />
+        <AppLayout />
+      </Provider>
+    </>
+  );
+}
+
+
+function AppLayout() {
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false)
 
   Updates.useUpdateEvents(async (event) => {
@@ -21,7 +36,8 @@ export default function Layout() {
       // When an update is available but not downloaded
       setLoading(true)
       try {
-        await Updates.fetchUpdateAsync()
+        const res = await Updates.fetchUpdateAsync()
+        dispatch(homeActions.clearAll())
         setLoading(false)
         alert('Update downloaded, will install now');
         await Updates.reloadAsync();
@@ -37,23 +53,12 @@ export default function Layout() {
     }
   });
 
+  useAppStart()
+
   if (loading) {
     return <Loading />
   }
 
-  return (
-    <>
-      <Provider store={store}>
-        <PersistGate loading={<Loading />} persistor={persistor} />
-        <AppLayout />
-      </Provider>
-    </>
-  );
-}
-
-
-function AppLayout() {
-  useAppStart()
   return (
     <SafeAreaProvider>
       <PaperProvider theme={theme}>

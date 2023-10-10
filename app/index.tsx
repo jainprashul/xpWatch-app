@@ -1,11 +1,11 @@
-import { StyleSheet, View, RefreshControl, Pressable } from 'react-native'
+import { StyleSheet, View, RefreshControl } from 'react-native'
 import React from 'react'
 import { Stack, router } from 'expo-router'
 import { theme } from '../style/theme'
 import { Image, ScrollView, ToastAndroid } from 'react-native'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import List from '../components/Shared/List'
-import { Chip, Text } from 'react-native-paper';
+import { Chip, Divider, Text } from 'react-native-paper';
 import { Media } from '../types/media'
 import Search from '../components/Search'
 import { MaterialIcons } from '@expo/vector-icons';
@@ -16,7 +16,7 @@ import { FlatList } from 'react-native-gesture-handler'
 import { generateRandomColor } from '../utils/utils'
 import Slider from '../components/Shared/Slider'
 
-const logo = 'https://xpwatch.vercel.app/logo.png'
+
 
 const Home = () => {
   const dispatch = useAppDispatch()
@@ -54,7 +54,7 @@ const Home = () => {
         title: 'xpWatch',
         headerTitle: props => <Header />,
       }} />
-        <Slider data={all.slice(0, 10)} />
+      <Slider data={all.slice(0, 10)} />
       <View style={{
         flex: 1,
         padding: 10,
@@ -62,12 +62,12 @@ const Home = () => {
         <Search />
         <ContinueWatching />
         <List data={all} horizontal />
-        <List data={movies as Media[]} name='Movies' horizontal link='/movie' />
-        <List data={tv as Media[]} name='TV Shows' horizontal link='/tv' />
-        <List data={(bollywood ?? []) as Media[]} name='Bollywood' horizontal />
+        <List data={movies} name='Movies' horizontal link='/movie' />
+        <List data={tv} name='TV Shows' horizontal link='/tv' />
+        <List data={(bollywood ?? [])} name='Bollywood' horizontal />
         <List data={anime} name='Anime' horizontal />
       </View>
-        <GenreList />
+      <GenreList />
     </ScrollView>
   )
 }
@@ -91,11 +91,11 @@ export function Header() {
   return (
     <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
       <View style={{ flex: 1, flexDirection: 'row', alignItems: "center" }}>
-        <Image
+        {/* <Image
           style={{ width: 40, height: 30 }}
           source={{ uri: logo }}
-        />
-        <Text>xpWatch</Text>
+        /> */}
+        <Text variant='labelLarge'>xpWatch</Text>
       </View>
       <View style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row', alignItems: "center", marginRight: 24 }}>
         <MaterialIcons name="favorite" size={30} color="#fff" onPress={() => {
@@ -106,16 +106,13 @@ export function Header() {
   );
 }
 
-function GenreList () {
+function GenreList() {
   const genrelist = useAppSelector(state => state.home.genre)
   return (
-    <View style={{
-      flex: 1,
-      marginVertical: 10,
-    }}>
-      <Text>Genre</Text>
-      <FlatList data={genrelist} numColumns={4} renderItem={({item}) => (
-        <Chip onPress={()=> {
+      <FlatList style={{
+        marginVertical: 10,
+      }} data={genrelist} numColumns={4} renderItem={({ item }) => (
+        <Chip onPress={() => {
           router.push({
             pathname: 'genre',
             params: {
@@ -125,9 +122,24 @@ function GenreList () {
           })
         }} style={{
           ...styles.genreChip, backgroundColor: generateRandomColor(0.7)
-        }} textStyle={{color: 'white'}}>{item.name}</Chip>
-      )} />
+        }} textStyle={{ color: 'white' }}>{item.name}</Chip>
+      )}
+        ListHeaderComponent={() => (
+          <View style={{
+            marginHorizontal: 10,
+          }}>
+          <Text style={{
+              marginTop: 6,
+              fontSize: 16,
+              fontWeight: 'bold',
+              fontStyle: 'italic',
+              fontVariant: ['small-caps']
+          }} >{"Genre"}</Text>
       
-    </View>
+      <Divider style={{ marginVertical: 6, }} bold />
+      </View>
+      
+        )}
+      />
   )
 }

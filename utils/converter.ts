@@ -5,6 +5,7 @@ import { MovieDetail, RecommendationsResult } from "../types/movieDetail";
 import { TVDetails } from "../types/tvDetails";
 import { SeasonDetail } from "../types/seasonDetail";
 import { AniListDetail } from "../types/anilistDetails";
+import { convertToDate } from "./utils";
 
 function getYear(date: Date | undefined) {
     if (!date) return ''
@@ -150,7 +151,7 @@ export function Season_to_SeasonMeta(data : SeasonDetail){
 export function AniList_to_MediaMini(data : AniList){
     const _data : MediaMini = {
         id: data.id.toString(),
-        title: data.title.romaji || data.title.english || data.title.native || '',
+        title: data.title.english || data.title.romaji || data.title.native || '',
         media_type: "anilist",
         poster: data.image,
         year: data.releaseDate,
@@ -172,7 +173,8 @@ export function AniList_to_AnimeMeta(data : AniListDetail){
         episodeCount: data.totalEpisodes,
         runtime: data.duration,
         cover: data.cover,
-        ratings: data.rating,
+        ratings: data.rating / 10,
+        releaseDate : convertToDate(data.startDate.day, data.startDate.month, data.startDate.year).toLocaleDateString(),
         genres: data.genres.map((genre, i) => ({
             id: i, name: genre
         })),
@@ -182,24 +184,25 @@ export function AniList_to_AnimeMeta(data : AniListDetail){
             name: episode.title ?? `Episode ${episode.number}`,
             description: episode.description ?? '',
             image: episode.image,
-            releaseDate: episode.createdAt?.toDateString() ?? '',
+            releaseDate: episode.createdAt as any ?? '',
         })) ?? [],
 
         casts: data.characters?.map((character) => ({
             id: character.id,
             character: character.name.full,
-            name: character.voiceActors.map((actor) => actor.name.full).join(', '),
+            name: character.voiceActors[0]?.name.full ?? '',
             image: character.image,
         })) ?? [],
 
         tagline: data.title.native,
         recommendations: data.recommendations?.map((recommendation) => ({
             id: recommendation.id.toString(),
-            title: recommendation.title.romaji || recommendation.title.english || recommendation.title.native || '',
+            title:  recommendation.title.english || recommendation.title.romaji || recommendation.title.native || '',
             media_type: "anilist",
             poster: recommendation.image,
             year: recommendation.type ?? '',
             description: "",
+            relation: recommendation.relationType ?? '',
         })) ?? [],
 
         similar: data.relations?.map((similar) => ({
@@ -210,6 +213,7 @@ export function AniList_to_AnimeMeta(data : AniListDetail){
             year: similar.type ?? '',
             type: similar.relationType ?? '',
             description: "",
+            relation: similar.relationType ?? '',
         })) ?? [],
     };
     return _data
@@ -237,10 +241,10 @@ export function MediaMeta_to_MediaMini(data : MovieMeta | TVMeta | AnimeMeta){
         year: data.year,
         description: data.description,
         totalCount: data.totalCount,
-        type: data.type,
     }
     return _data
 }
 
 
 export const WATCHED_ALREADY = 'watchedAlready';
+

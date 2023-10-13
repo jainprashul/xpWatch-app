@@ -4,7 +4,7 @@ import { AnimeDetail } from "../types/animeDetail";
 import { MovieDetail } from "../types/movieDetail";
 import { TVDetails } from "../types/tvDetails";
 import { anilist, animeAPI, animeX, m, movieAPI, t, tv, tvAPI } from "./constants"
-import { TMDB_Movie_to_MediaMeta, TMDB_TV_to_TVMeta } from "./converter";
+import { AniList_to_AnimeMeta, TMDB_Movie_to_MediaMeta, TMDB_TV_to_TVMeta } from "./converter";
 
 export async function getAnimeData(id : string) {
     try {
@@ -45,6 +45,11 @@ export const getEpisodeSources = async (sources : any ) => {
     return watchLinks;
 }
 
+export async function fetchAnilist(id : string){
+    const res = await (await fetch(anilist.anime(id))).json() as AniListDetail;
+    const data = AniList_to_AnimeMeta(res);
+    return data;
+}
 
 export const getAnilistDetails = async (id : string) => {
     try {

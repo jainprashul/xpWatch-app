@@ -48,3 +48,7 @@ export const debouncePromise = (fn, ms = 0) => {
     return `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 
     ${Math.floor(Math.random() * 256)}, ${opacity})`;
   }
+
+  export const convertToDate = (day , month , year) => {
+    return new Date(year, month, day);
+  }

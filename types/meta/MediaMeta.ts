@@ -6,7 +6,7 @@ export interface MediaMini {
     year: string | number;
     description?: string;
     totalCount?: number;
-    type?: string;
+    relation?: string;
 }
 
 
@@ -37,6 +37,7 @@ export interface TVMeta extends Media {
 }
 
 export interface AnimeMeta extends Media {
+    releaseDate: string;
     episodeCount: number;
     runtime: number;
     episodes: Episode[];

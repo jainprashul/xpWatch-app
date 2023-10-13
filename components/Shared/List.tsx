@@ -88,7 +88,7 @@ function HorizontalList({ data, name, link }: Props) {
 }
 
 function ItemView({ item }: { item: MediaMini }) {
-    const { title, media_type, id, poster, year } = item
+    const { title, media_type, id, poster, year, relation } = item
     function _onPress() {
         console.log(id, title ?? name ?? '' , media_type)
         if (media_type === 'movie') {
@@ -118,7 +118,7 @@ function ItemView({ item }: { item: MediaMini }) {
                                 <MaterialIcons name={media_type === 'anilist' ? "20mp" : media_type as any} size={20} color={'white'} />
                                 <Text>  {title} </Text>
                             </View>
-                            <Text>{year}</Text>
+                            <Text variant='bodySmall' >{year} {relation ? `- ${relation}` : null }</Text>
                         </View>
                     </View>
                 </Card.Content>

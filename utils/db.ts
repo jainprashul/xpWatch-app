@@ -1,11 +1,12 @@
 import { AniListDetail } from "../types/anilistDetails";
 import { AnimeRes } from "../types/anime";
 import { AnimeDetail } from "../types/animeDetail";
+import { GenreResultMovie, GenreResultTV } from "../types/genreResult";
 import { MovieDetail } from "../types/movieDetail";
 import { SeasonDetail } from "../types/seasonDetail";
 import { TVDetails } from "../types/tvDetails";
-import { anilist, animeAPI, animeX, m, movieAPI, t, tv, tvAPI } from "./constants"
-import { AniList_to_AnimeMeta, TMDB_Movie_to_MediaMeta, TMDB_TV_to_TVMeta } from "./converter";
+import { anilist, animeAPI, animeX, genre, m, movieAPI, t, tv, tvAPI } from "./constants"
+import { AniList_to_AnimeMeta, GenreResultMovie_to_MediaMini, GenreResultTV_to_MediaMini, TMDB_Movie_to_MediaMeta, TMDB_TV_to_TVMeta } from "./converter";
 
 export async function getAnimeData(id : string) {
     try {
@@ -224,3 +225,18 @@ export const getMovieSources =  (id : string, imdb_id : string) => {
 }
 
 export type MovieSrc = Awaited<ReturnType<typeof getMovieSources>>;
+
+
+export async function fetchMoviesFromGenre(id : string, page : number = 1){
+    const res = await fetch(genre.movie(id , page));  
+    const data = (await res.json()).results as GenreResultMovie[];
+    const movies = data.map(item => GenreResultMovie_to_MediaMini(item));
+    return movies;
+}
+
+export async function fetchTVFromGenre(id : string, page : number = 1){
+    const res = await fetch(genre.tv(id , page));  
+    const data = (await res.json()).results as GenreResultTV[];
+    const tv = data.map(item => GenreResultTV_to_MediaMini(item));
+    return tv;
+}

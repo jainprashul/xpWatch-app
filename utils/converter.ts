@@ -6,6 +6,7 @@ import { TVDetails } from "../types/tvDetails";
 import { SeasonDetail } from "../types/seasonDetail";
 import { AniListDetail } from "../types/anilistDetails";
 import { convertToDate } from "./utils";
+import { GenreResultMovie, GenreResultTV } from "../types/genreResult";
 
 function getYear(date: Date | undefined) {
     if (!date) return ''
@@ -165,7 +166,7 @@ export function AniList_to_MediaMini(data : AniList){
 export function AniList_to_AnimeMeta(data : AniListDetail){
     const _data : AnimeMeta = {
         id: data.id.toString(),
-        title: data.title.romaji || data.title.english || data.title.native || '',
+        title:  data.title.english || data.title.romaji || data.title.native || '',
         media_type: "anilist",
         poster: data.image,
         year: data.releaseDate,
@@ -245,6 +246,32 @@ export function MediaMeta_to_MediaMini(data : MovieMeta | TVMeta | AnimeMeta){
     }
     return _data
 }
+
+export function GenreResultMovie_to_MediaMini(data : GenreResultMovie){
+
+    const _data : MediaMini = {
+        id: data.id.toString(),
+        title: data.title,
+        media_type: "movie",
+        poster: `https://image.tmdb.org/t/p/w342${data.poster_path}`,
+        year: getYear(data.release_date),
+        description: data.overview,
+    }
+    return _data
+}
+
+export function GenreResultTV_to_MediaMini(data : GenreResultTV){
+    
+        const _data : MediaMini = {
+            id: data.id.toString(),
+            title: data.name,
+            media_type: "tv",
+            poster: `https://image.tmdb.org/t/p/w342${data.poster_path}`,
+            year: getYear(data.first_air_date),
+            description: data.overview,
+        }
+        return _data
+    }
 
 
 export const WATCHED_ALREADY = 'watchedAlready';

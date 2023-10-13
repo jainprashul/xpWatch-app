@@ -11,9 +11,7 @@ import { useAppStart } from '../components/useAppStart';
 import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
 import { useState } from 'react';
-import { useAppDispatch } from '../store/hooks';
-import { homeActions } from '../store/context/homeSlice';
-
+import { deleteAllData } from '../utils/asyncStorage';
 export default function Layout() {
 
   return (
@@ -28,7 +26,6 @@ export default function Layout() {
 
 
 function AppLayout() {
-  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false)
 
   Updates.useUpdateEvents(async (event) => {
@@ -37,9 +34,11 @@ function AppLayout() {
       setLoading(true)
       try {
         const res = await Updates.fetchUpdateAsync()
-        dispatch(homeActions.clearAll())
         setLoading(false)
         alert('Update downloaded, will install now');
+        alert(JSON.stringify(res));
+
+        deleteAllData()
         await Updates.reloadAsync();
       } catch (error) {
         alert('Error while updating. Restart the app to update')

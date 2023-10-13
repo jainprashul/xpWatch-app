@@ -140,7 +140,16 @@ const MediaDetail = ({ data, type, currentEpisode, children }: Props) => {
             <View style={{ padding: 10 }}>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginVertical: 10 }}>
                     {data?.genres?.map((genre) => {
-                        return <Chip key={genre.id} mode='outlined' style={{ margin: 2 }}>{genre.name}</Chip>
+                        return <Chip key={genre.id} mode='outlined' onPress={()=> {
+                            if(type === 'anilist') return;
+                            router.push({
+                                pathname: 'genre',
+                                params: {
+                                    id: genre.id,
+                                    name: genre.name
+                                }
+                            })
+                        }} style={{ margin: 2 }}>{genre.name}</Chip>
                     })}
                 </View>
                 <Text variant='bodySmall' style={{

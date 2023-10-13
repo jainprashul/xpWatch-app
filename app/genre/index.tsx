@@ -6,27 +6,24 @@ import { genre } from '../../utils/constants'
 import List from '../../components/Shared/List'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Button, SegmentedButtons } from 'react-native-paper'
+import { fetchMoviesFromGenre, fetchTVFromGenre } from '../../utils/db'
+import { MediaMini } from '../../types/meta/MediaMeta'
 
 const GenreList = () => {
     const { id, name } = useLocalSearchParams()
 
-    const [movies, setMovies] = React.useState<any[]>([])
-    const [tv, setTv] = React.useState<any[]>([])
+    const [movies, setMovies] = React.useState<MediaMini[]>([])
+    const [tv, setTv] = React.useState<MediaMini[]>([])
 
     const [select, setSelect] = React.useState("movie")
     const [page, setPage] = React.useState(1)
 
     React.useEffect(() => {
-        console.log(id)
-        fetch(genre.movie(id as string)).then(res => res.json()).then(res => {
-            const data = res.results.map((item: any) => ({ ...item, media_type: 'movie' }))
-            setMovies((prev) => [...prev, ...data])
-            console.log("movies", res.results.length)
+        fetchTVFromGenre(id as string, page).then(res => {
+            setTv((prev) => [...prev, ...res])
         })
-        fetch(genre.tv(id as string)).then(res => res.json()).then(res => {
-            const data = res.results.map((item: any) => ({ ...item, media_type: 'tv' }))
-            setTv((prev) => [...prev, ...data])
-            console.log("tv", res.results.length)
+        fetchMoviesFromGenre(id as string, page).then(res => {
+            setMovies((prev) => [...prev, ...res])
         })
     }, [id, page])
 
@@ -52,7 +49,8 @@ const GenreList = () => {
             } />
 
             <View style={{
-                justifyContent : "flex-end"
+                justifyContent : "flex-end",
+                marginBottom : 20
             }}>
                 <Button  onPress={() => {
                     setPage((prev) => prev + 1)

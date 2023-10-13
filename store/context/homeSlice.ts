@@ -194,35 +194,6 @@ export const homeSlice = createSlice({
         setLastRefreshed: (state, action: PayloadAction<number>) => {
             state.lastRefreshed = action.payload;
         },
-        clearAll: (state) => {
-            state.trending = {
-                movies: [],
-                tv: [],
-                all: [],
-                anime: [],
-                bollywood: [],
-            };
-            state.discover = {
-                movies: [],
-                tv: [],
-                all: [],
-                anime: [],
-            };
-            state.movies = {
-                popular: [],
-                topRated: [],
-                genres: [],
-                lastRefreshed: 0,
-            };
-            state.tv = {
-                popular: [],
-                topRated: [],
-                genres: [],
-                lastRefreshed: 0,
-            };
-            state.lastRefreshed = 0;
-            state.genre = [];
-        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchTrending.fulfilled, (state, action) => {

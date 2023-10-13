@@ -250,7 +250,7 @@ const AniListDetail = () => {
                             <Card.Cover style={styles.poster} source={{ uri: movie.image }} />
                             <Card.Content>
                                 <Text variant='bodySmall' >{movie.title.english ?? movie.title.userPreferred}</Text>
-                                <Text variant='bodySmall' >{movie.type}</Text>
+                                <Text variant='bodySmall' >{movie.relationType}</Text>
                             </Card.Content>
                         </Card>
                     }

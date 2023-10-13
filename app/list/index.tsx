@@ -5,7 +5,6 @@ import { BottomNavigation, List, Searchbar, Text } from 'react-native-paper'
 import { myListActions, selectAnime, selectRecents, selectMovie, selectTV, selectWatchedAlready } from '../../store/context/myListSlice';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import { Stack, router } from 'expo-router';
-import { AniListDetail } from '../../types/anilistDetails';
 
 
 const list = () => {
@@ -74,8 +73,8 @@ function MovieList() {
                         <List.Item style={{ paddingHorizontal: 10 }}
                             key={item.id}
                             title={item.title}
-                            description={item.overview}
-                            left={props => <Image {...props} source={{ uri: `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
+                            description={`${item.year} | ${item.description}`}
+                            left={props => <Image {...props} source={{ uri: item.poster as string }} style={{ width: 50, height: 75 }} />}
                             onPress={() => {
                                 router.push('movie/' + item.id)
                             }}
@@ -94,20 +93,18 @@ function TvList() {
         <ScrollView>
             <List.Section>
                 <SearchBar />
-                <List.Subheader>TV List</List.Subheader>
+                <List.Subheader>Movie List</List.Subheader>
                 <FlatList
                     data={data}
                     renderItem={({ item }) => (
                         <List.Item style={{ paddingHorizontal: 10 }}
                             key={item.id}
-                            title={item.name}
-                            description={item.overview}
-                            left={props => <Image {...props} source={{ uri: `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
-                            //   right={props => <List.Icon {...props} icon="dots-vertical" />}
+                            title={item.title}
+                            description={`${item.year} | ${item.description}`}
+                            left={props => <Image {...props} source={{ uri: item.poster as string }} style={{ width: 50, height: 75 }} />}
                             onPress={() => {
                                 router.push('tv/' + item.id)
-                            }
-                            }
+                            }}
                         />
                     )}
                 />
@@ -117,22 +114,21 @@ function TvList() {
 }
 
 function AnimeList() {
-    const data = useAppSelector(selectAnime) as AniListDetail[]
+    const data = useAppSelector(selectAnime)
 
     return (
         <ScrollView>
             <List.Section>
                 <SearchBar />
-                <List.Subheader>Anime List</List.Subheader>
+                <List.Subheader>Movie List</List.Subheader>
                 <FlatList
                     data={data}
                     renderItem={({ item }) => (
                         <List.Item style={{ paddingHorizontal: 10 }}
                             key={item.id}
-                            title={item.title.english ?? item.title.userPreferred}
-                            description={item.description}
-                            left={props => <Image {...props} source={{ uri: `${item.image }` }} style={{ width: 50, height: 75 }} />}
-                            //   right={props => <List.Icon {...props} icon="dots-vertical" />}
+                            title={item.title}
+                            description={`${item.year} | ${item.description}`}
+                            left={props => <Image {...props} source={{ uri: item.poster as string }} style={{ width: 50, height: 75 }} />}
                             onPress={() => {
                                 router.push('anilist/' + item.id)
                             }}
@@ -149,26 +145,25 @@ function WatchedAlready() {
 
     return (
         <ScrollView>
-            <List.Section>
-                <List.Subheader>Watched Already List</List.Subheader>
-                <SearchBar />
-                <FlatList
-                    data={data}
-                    renderItem={({ item }) => (
-                        <List.Item style={{ paddingHorizontal: 10 }}
-                            key={item.id}
-                            title={item.title?.english ?? item.title ?? item.name}
-                            description={item.overview ?? item.description}
-                            left={props => <Image {...props} source={{ uri: item.coverImage ??  item.image ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
-                            //   right={props => <List.Icon {...props} icon="dots-vertical" />}
-                            onPress={() => {
-                                router.push(item.type + '/' + item.id)
-                            }}
-                        />
-                    )}
-                />
-            </List.Section>
-        </ScrollView>
+        <List.Section>
+            <SearchBar />
+            <List.Subheader>Movie List</List.Subheader>
+            <FlatList
+                data={data}
+                renderItem={({ item }) => (
+                    <List.Item style={{ paddingHorizontal: 10 }}
+                        key={item.id}
+                        title={item.title}
+                        description={`${item.year} | ${item.description}`}
+                        left={props => <Image {...props} source={{ uri: item.poster as string }} style={{ width: 50, height: 75 }} />}
+                        onPress={() => {
+                            router.push(item.media_type + '/' + item.id)
+                        }}
+                    />
+                )}
+            />
+        </List.Section>
+    </ScrollView>
     )
 }
 
@@ -177,30 +172,25 @@ function Recents() {
 
     return (
         <ScrollView>
-            {/* <Text> {JSON.stringify(data)} </Text> */}
-            <List.Section>
-                <List.Subheader>Recents</List.Subheader>
-                <FlatList
-                    data={data}
-                    renderItem={({ item }) => (
-                        <List.Item style={{ paddingHorizontal: 10 }}
-                            key={item.id}
-                            title={item.title?.english ?? item.title ?? item.name}
-                            description={item.overview ?? item.description}
-                            left={props => <Image {...props} source={{ uri: item.coverImage ?? item.image ?? `https://image.tmdb.org/t/p/w342${item.poster_path}` }} style={{ width: 50, height: 75 }} />}
-                            //   right={props => <List.Icon {...props} icon="dots-vertical" />}
-                            onPress={() => {
-                                router.push(item.type + '/' + item.id)
-                            }}
-                        />
-                    )}
-                />
-            </List.Section>
-        </ScrollView>
+        <List.Section>
+            <SearchBar />
+            <List.Subheader>Movie List</List.Subheader>
+            <FlatList
+                data={data}
+                renderItem={({ item }) => (
+                    <List.Item style={{ paddingHorizontal: 10 }}
+                        key={item.id}
+                        title={item.title}
+                        description={`${item.year} | ${item.description}`}
+                        left={props => <Image {...props} source={{ uri: item.poster as string }} style={{ width: 50, height: 75 }} />}
+                        onPress={() => {
+                            router.push(item.media_type + '/' + item.id)
+                        }}
+                    />
+                )}
+            />
+        </List.Section>
+    </ScrollView>
     )
 
-}
-
-function isAniList(item: any): item is AniListDetail {
-    return Boolean(!item.slug)
 }

@@ -1,5 +1,5 @@
 import { View, Pressable, FlatList, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Card, Divider, Text } from 'react-native-paper'
 import { MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -25,9 +25,10 @@ type Props = {
     link?: string
 }
 
-const List = ({ data, name, horizontal, link }: Props) => {
+    const List = ({ data, name, horizontal, link }: Props) => {
     if (data?.length === 0) return null;
-    if (horizontal) return <HorizontalList data={data} name={name} link={link} />
+    const _data = useMemo(() => data.filter(m => m.poster), [data])
+    if (horizontal) return <HorizontalList data={_data} name={name} link={link} />
     return (
         <>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -45,7 +46,7 @@ const List = ({ data, name, horizontal, link }: Props) => {
                 }
             </View>
             <Divider style={{ marginVertical: 6, }} bold />
-            <FlatList data={data} renderItem={({ item }) => <ItemView key={item.id} item={item} />}
+            <FlatList data={_data} renderItem={({ item }) => <ItemView key={item.id} item={item} />}
                 numColumns={2}
                 keyExtractor={(item) => item.id.toString()}
                 ListEmptyComponent={() => <Loading />}
@@ -89,7 +90,7 @@ function HorizontalList({ data, name, link }: Props) {
 function ItemView({ item }: { item: MediaMini }) {
     const { title, media_type, id, poster, year } = item
     function _onPress() {
-        console.log(id, title ?? name ?? '')
+        console.log(id, title ?? name ?? '' , media_type)
         if (media_type === 'movie') {
             router.push('movie/' + id)
         } else if (media_type === 'tv') {
@@ -108,7 +109,7 @@ function ItemView({ item }: { item: MediaMini }) {
                 <Pressable onLongPress={(e) => {
                     console.log(item)
                 }} onPress={_onPress} >
-                    <Card.Cover style={styles.poster} source={{ uri: poster }} />
+                    <Card.Cover style={styles.poster} source={{ uri: poster as string }} />
                 </Pressable>
                 <Card.Content>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

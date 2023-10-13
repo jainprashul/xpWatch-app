@@ -4,6 +4,7 @@ import { AnimeDetail } from "../types/animeDetail";
 import { MovieDetail } from "../types/movieDetail";
 import { TVDetails } from "../types/tvDetails";
 import { anilist, animeAPI, animeX, m, movieAPI, t, tv, tvAPI } from "./constants"
+import { TMDMovie_to_MediaMeta } from "./converter";
 
 export async function getAnimeData(id : string) {
     try {
@@ -191,11 +192,17 @@ export const getTVSeasonEpisodeSources = (id : string, seasonID = 1, episodeID =
 
 export type TvShowsSrc = Awaited<ReturnType<typeof getTVSeasonEpisodeSources>>;
 
+export async function fetchMovie(id : string){
+    const res = await (await fetch(m(id))).json() as MovieDetail;
+    const data = TMDMovie_to_MediaMeta(res);
+
+    return data;
+}
+
 export const getMovieData = async (id : string) => {
     console.log('movie', m(id));
     const res = await (await fetch(m(id))).json() as MovieDetail;
     const { recommendations: recommandation, credits: credit, similar, external_ids } = res;
-
 
     delete res.recommendations;
     delete res.credits;

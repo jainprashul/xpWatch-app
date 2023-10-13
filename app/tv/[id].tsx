@@ -9,7 +9,6 @@ import { Button, Divider, List, Surface, Text } from 'react-native-paper'
 import { router } from 'expo-router';
 import Overview from '../../components/Overview'
 import { Picker } from '@react-native-picker/picker'
-import { getYear } from '../../components/Shared/List'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { tvActions } from '../../store/context/tvSlice'
 import { has, myListActions, selectHistoryByID } from '../../store/context/myListSlice'
@@ -217,8 +216,8 @@ const TvPage = () => {
             <Divider style={{ marginVertical: 6 }} bold />
 
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
-                <Text variant='labelLarge'>{getYear(result.first_air_date)} </Text>
-                <Text variant='labelLarge'>{result.number_of_seasons} Seasons</Text>
+                {/* <Text variant='labelLarge'>{getYear(result.first_air_date)} </Text> */}
+                <Text variant='labelLarge'>{result.number_of_seasons} Seasons</Text> 
                 <Text variant='labelLarge'>{result.number_of_episodes} Episodes</Text>
             </View>
             <Ratings ratings={result?.vote_average ?? 0} />

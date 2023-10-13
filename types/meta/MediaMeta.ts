@@ -40,7 +40,7 @@ export interface AnimeMeta extends Media {
     releaseDate: string;
     episodeCount: number;
     runtime: number;
-    episodes: Episode[];
+    episodes: EpisodeMeta[];
 }
 
 type Cast = {
@@ -61,14 +61,15 @@ type Season = {
 }
 
 export interface SeasonMeta extends Season {
-    episodes: Episode[];
+    episodes: EpisodeMeta[];
 }
 
-type Episode = {
+export type EpisodeMeta = {
     id: number | string;
     episodeNumber: number;
     name: string;
     description?: string;
     releaseDate: string;
+    runtime?: number;
     image?: string;
 }

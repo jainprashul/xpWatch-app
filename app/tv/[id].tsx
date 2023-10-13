@@ -1,12 +1,11 @@
 import { StyleSheet, View, FlatList, Image, } from 'react-native'
 import React, { useEffect } from 'react'
-import { useLocalSearchParams } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { fetchTVDetails, getTVSeasonData } from '../../utils/db'
 import { Stack } from 'expo-router'
 import Loading from '../../components/Loading'
 import { theme } from '../../style/theme'
 import { List, Text } from 'react-native-paper'
-import { Dimensions } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { tvActions } from '../../store/context/tvSlice'
@@ -15,8 +14,9 @@ import analytics from '@react-native-firebase/analytics'
 import { Episode } from '../../types/seasonDetail'
 import MediaDetail from '../../components/Shared/MediaDetail'
 import { TVMeta } from '../../types/meta/MediaMeta'
+import { Season_to_SeasonMeta } from '../../utils/converter'
+import { playerAction } from '../../store/context/playerSlice'
 
-const height = Dimensions.get('window').height
 
 
 const TvPage = () => {
@@ -61,7 +61,7 @@ const TvPage = () => {
 
     useEffect(() => {
         getTVSeasonData(id as string, current.season).then((res) => {
-            dispatch(tvActions.setSeasonDetail(res))
+            dispatch(tvActions.setSeasonDetail(Season_to_SeasonMeta(res)))
             setLoading2(false)
         }).catch((err) => {
             console.log('season ', err)
@@ -86,8 +86,8 @@ const TvPage = () => {
 
         <View>
             <Text variant='labelLarge' >{season?.name}</Text>
-            <Text variant='bodyMedium' >{season?.overview}</Text>
-            <Text variant='labelLarge' >{season?.air_date?.toString()}</Text>
+            <Text variant='bodyMedium' >{season?.description}</Text>
+            <Text variant='labelLarge' >{season?.year}</Text>
             <Text variant='labelLarge' >{season?.episodes?.length} Episodes</Text>
 
             <List.Section>
@@ -102,18 +102,24 @@ const TvPage = () => {
                            
                                title="Episodes">
                            </List.Accordion>}
-                        data={JSON.parse(JSON.stringify(season?.episodes)).sort((a : Episode, b : Episode) => sort * (a.episode_number - b.episode_number))}
+                        data={season.episodes}
                         renderItem={({ item: v }) => (<List.Item
                             key={v.id}
-                            title={`${v.episode_number}. ${v.name}`}
-                            description={v.overview}
+                            title={`${v.episodeNumber}. ${v.name}`}
+                            description={v.description}
                             onPress={() => {
-                                dispatch(tvActions.setEpisode(v.episode_number))
+                                dispatch(tvActions.setEpisode(v.episodeNumber))
+                            dispatch(playerAction.setData(data))
                                 setTimeout(() => {
-                                    // play()
+                                    router.push({
+                                        pathname: 'player',
+                                        params: {
+                                            type: 'tv',
+                                        }
+                                    })
                                 }, 100);
                             }}
-                            left={props => <Image {...props} source={{ uri: `https://image.tmdb.org/t/p/w300${v.still_path}` }} style={{ width: 80, height: 100, borderRadius: 10, marginVertical: 10 }} />}
+                            left={props => <Image {...props} source={{ uri: v.image }} style={{ width: 80, height: 100, borderRadius: 10, marginVertical: 10 }} />}
                         />)}
                         keyExtractor={item => item.id.toString()}
                     />
@@ -121,7 +127,7 @@ const TvPage = () => {
         </View></>
 
     return (
-      <MediaDetail data={data} type='tv'>
+      <MediaDetail data={data} type='tv' currentEpisode={`S${current.season} ` + `E${current.episode}`} >
             <SeasonBox />
       </MediaDetail>
     )

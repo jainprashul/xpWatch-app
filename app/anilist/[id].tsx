@@ -1,6 +1,6 @@
 import { Image, StyleSheet, View, FlatList } from 'react-native'
 import React, { useEffect } from 'react'
-import { Stack, useLocalSearchParams } from 'expo-router'
+import { Stack, router, useLocalSearchParams } from 'expo-router'
 import { theme } from '../../style/theme'
 import { fetchAnilist } from '../../utils/db'
 import Loading from '../../components/Loading'
@@ -12,6 +12,7 @@ import { animeActions } from '../../store/context/animeSlice'
 import { POSTER_HEIGHT } from '../../components/Shared/List'
 import MediaDetail from '../../components/Shared/MediaDetail'
 import { AnimeMeta } from '../../types/meta/MediaMeta'
+import { playerAction } from '../../store/context/playerSlice'
 
 const AniListDetail = () => {
     const dispatch = useAppDispatch();
@@ -28,6 +29,10 @@ const AniListDetail = () => {
 
     const [data, setData] = React.useState({} as AnimeMeta)
     const [loading, setLoading] = React.useState(true)
+
+    const episode = useAppSelector(state => state.anime.current.episode)
+
+
 
 
     const setEpisode = (e: number) => {
@@ -81,10 +86,17 @@ const AniListDetail = () => {
                             description={v.description}
                             onPress={() => {
                                 setEpisode(v.episodeNumber)
-                                // setTimeout(() => {
-                                // play(v.id)
-                                // }, 200);
+                                dispatch(playerAction.setData(data))
+                                setTimeout(() => {
+                                    router.push({
+                                        pathname: 'player',
+                                        params: {
+                                            type: data.media_type,
+                                        }
+                                    })
+                                }, 100);
                             }}
+                            
                             left={props => <Image {...props} source={{ uri: v.image }} style={{ width: 80, height: 100, borderRadius: 10, marginVertical: 10 }} />}
                         />)
                         }
@@ -95,7 +107,7 @@ const AniListDetail = () => {
     }
 
     return (
-        <MediaDetail data={data} type='anilist'>
+        <MediaDetail data={data} type='anilist' currentEpisode={`E${episode}`} >
             <SeasonBox />
         </MediaDetail>
     )

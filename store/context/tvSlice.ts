@@ -1,12 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { SeasonDetail } from "../../types/seasonDetail"
+import { SeasonMeta } from "../../types/meta/MediaMeta"
 
 type initState = {
     current : {
         episode: number,
         season: number,
     }
-    season : SeasonDetail
+    season : SeasonMeta
 
     // show : TvShowsX
 }
@@ -16,7 +16,7 @@ const initialState : initState = {
         episode: 1,
         season: 1
     },
-    season : {} as SeasonDetail
+    season : {} as SeasonMeta
 }
 
 const tvReducer = createSlice({
@@ -29,7 +29,7 @@ const tvReducer = createSlice({
         setSeason: (state, action : PayloadAction<number>) => {
             state.current.season = action.payload
         },
-        setSeasonDetail: (state, action : PayloadAction<SeasonDetail>) => {
+        setSeasonDetail: (state, action : PayloadAction<SeasonMeta>) => {
             state.season = action.payload
         },
         nextEpisode: (state) => {

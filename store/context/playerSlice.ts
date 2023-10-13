@@ -1,19 +1,25 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { AnimeMeta, MovieMeta, TVMeta } from "../../types/meta/MediaMeta";
 
 type initState = {
-    src : string;
+    src : string | null
+    data : TVMeta | MovieMeta | AnimeMeta | null
 }
 
 const initialState : initState = {
-    src : ''
+    src : null,
+    data : null
 }
 
 const playerSlice = createSlice({
     name : 'player',
     initialState,
     reducers : {
-        setSrc(state, action : PayloadAction<string>){
+        setSrc(state, action : PayloadAction<string | null>){
             state.src = action.payload
+        },
+        setData(state, action : PayloadAction<TVMeta | MovieMeta | AnimeMeta | null>){
+            state.data = action.payload
         }
     }
 })
@@ -21,4 +27,3 @@ const playerSlice = createSlice({
 export const playerAction = playerSlice.actions
 
 export default playerSlice.reducer;
-

@@ -2,6 +2,7 @@ import { AniListDetail } from "../types/anilistDetails";
 import { AnimeRes } from "../types/anime";
 import { AnimeDetail } from "../types/animeDetail";
 import { MovieDetail } from "../types/movieDetail";
+import { SeasonDetail } from "../types/seasonDetail";
 import { TVDetails } from "../types/tvDetails";
 import { anilist, animeAPI, animeX, m, movieAPI, t, tv, tvAPI } from "./constants"
 import { AniList_to_AnimeMeta, TMDB_Movie_to_MediaMeta, TMDB_TV_to_TVMeta } from "./converter";
@@ -72,10 +73,19 @@ export const getAnilistDetails = async (id : string) => {
 
 export type AnilistX = Awaited<ReturnType<typeof getAnilistDetails>>;
 
+
+export type AniEpisodeSrc = {
+    server: string;
+    quality: string;
+    title: string;
+    url: string;
+    type: string;
+    videoSrc: string;
+}
+
 export const getAniEpisodeSources = async (id : string) => {
    try {
     console.log(anilist.watchEpisode(id))
-
     const res = await fetch(anilist.watchEpisode(id))
     console.log("Res", res)
     if (!res.ok) {
@@ -85,7 +95,7 @@ export const getAniEpisodeSources = async (id : string) => {
             throw new Error('Not Found')
         }
         const links = await res.json();
-        const watchLinks = [{
+        const watchLinks : AniEpisodeSrc[]  = [{
             server: 'AnimeX',
             quality: 'HD',
             title: 'Watch on AnimeX',
@@ -98,7 +108,7 @@ export const getAniEpisodeSources = async (id : string) => {
     const links = await res.json();
     
     console.log(anilist.watchEpisode(id), links)
-    const watchLinks = links.map((l : any) => ({
+    const watchLinks : AniEpisodeSrc[] = links.map((l : any) => ({
         server: l.name,
         quality: 'HD',
         title: 'Watch on ' + l.name,
@@ -109,10 +119,9 @@ export const getAniEpisodeSources = async (id : string) => {
     return watchLinks;
    } catch (error) {
     console.error("ERROR FETCH",error)
+    throw error;
    }
 }
-
-export type AniEpisodeSrc = Awaited<ReturnType<typeof getAniEpisodeSources>>;
 
 export async function fetchTVDetails(id : string){
     const res = await (await fetch(t(id))).json() as TVDetails; 
@@ -123,7 +132,7 @@ export async function fetchTVDetails(id : string){
 
 export const getTVSeasonData = async (id : string, seasonID = 1) => {
     console.log('tv', tv.season(id, seasonID));
-    const season = await (await fetch(tv.season(id, seasonID))).json();
+    const season = await (await fetch(tv.season(id, seasonID))).json() as SeasonDetail;
     return season;
 }
 

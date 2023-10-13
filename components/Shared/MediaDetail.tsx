@@ -12,13 +12,14 @@ import { MediaMeta_to_MediaMini, WATCHED_ALREADY } from '../../utils/converter'
 import analytics from '@react-native-firebase/analytics'
 import Ratings from '../Ratings'
 import List, { POSTER_HEIGHT, POSTER_WIDTH } from './List'
+import { playerAction } from '../../store/context/playerSlice'
 
 
 type Props = {
     data: MovieMeta | TVMeta | AnimeMeta
     type: "movie" | "tv" | "anime" | "anilist"
     children?: React.ReactNode
-    currentEpisode?: number
+    currentEpisode?: string
 }
 
 const MediaDetail = ({ data, type, currentEpisode, children }: Props) => {
@@ -87,17 +88,17 @@ const MediaDetail = ({ data, type, currentEpisode, children }: Props) => {
 
                     <View style={{ marginVertical: 10, overflow: 'hidden', flexDirection: 'row', justifyContent: "space-around", alignItems: "center" }}>
                         <Button mode="contained" style={{ marginVertical: 10, width: 250 }} onPress={() => {
+                            dispatch(playerAction.setData(data))
                             router.push({
                                 pathname: 'player',
                                 params: {
                                     type: type,
-                                    result: JSON.stringify(data),
                                 }
                             })
                         }} labelStyle={{
                             color: 'white'
                         }} >
-                            Watch Now { currentEpisode ? `E ${currentEpisode}` : null }
+                            Watch Now { currentEpisode }
                         </Button>
                         <MaterialIcons name={favorite ? "favorite" : "favorite-border"} size={30} color={theme.colors.primary} onPress={() => {
                             favorite ? RemoveFromFavorite() : AddtoFavorite()

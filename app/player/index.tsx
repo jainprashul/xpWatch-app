@@ -8,11 +8,11 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Movie from './Movie';
 import { myListActions } from '../../store/context/myListSlice';
 import TV from './TV';
-import Anime from './Anime';
 import { useKeepAwake } from 'expo-keep-awake';
-import { RecommandationView } from '../../components/OverviewDetails';
-import AniList from './AniList';
 import { Text } from 'react-native-paper';
+import { MediaMeta_to_MediaMini } from '../../utils/converter';
+import { playerAction } from '../../store/context/playerSlice';
+import AniList from './AniList';
 
 
 
@@ -20,24 +20,28 @@ const Player = () => {
 
     useKeepAwake();
 
-    const { sources, type, result, recommandations } = useLocalSearchParams()
-    const srcs = JSON.parse(sources as string)
-    const data = JSON.parse(result as string)
-    const recommandationsData = JSON.parse((recommandations ?? "[]") as string)
+    const {  type } = useLocalSearchParams()
+
+
+    console.log("type", type)
+
     useEffect(() => {
         LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+        return () => {
+            playerAction.setSrc(null)
+        }
     }, [])
 
     const XView = ({ type }: { type: string }) => {
         switch (type) {
             case 'tv':
-                return <TV data={data} srcs={srcs} />
+                return <TV  />
             case 'movie':
-                return <Movie data={data} srcs={srcs} />
-            case 'anime':
-                return <Anime data={data} srcs={srcs} />
+                return <Movie  />
+            // case 'anime':
+            //     return <Anime data={data} srcs={srcs} />
             case 'anilist':
-                return <AniList data={data} srcs={srcs} />
+                return <AniList />
         }
     }
 
@@ -46,7 +50,7 @@ const Player = () => {
             <Stack.Screen options={{
                 headerShown: false,
             }} />
-            <Video data={data} type={type as string} />
+            <Video />
 
             {/* <Button mode="contained" style={{ marginVertical: 10 }} onPress={() => {
                 video.current?.reload()
@@ -54,8 +58,6 @@ const Player = () => {
 
             <XView type={type as string} />
 
-            <View style={{ height: 20 }} />
-            <RecommandationView result={recommandationsData} text='Recommandations' />
 
         </ScrollView>
     )
@@ -73,26 +75,23 @@ const styles = StyleSheet.create({
         height: 250,
         width: '100%',
         maxHeight: 250,
+        backgroundColor: "#000",
     },
 
 })
 
-function Video(
-    { data, type }: {
-        data: any,
-        type: string,
-        source?: string,
-    }
-) {
+function Video() {
     const video = React.useRef<WebView>(null);
     const dispatch = useAppDispatch()
+    const data = useAppSelector((state) => state.player.data) as any
 
+    if (!data) {
+        return null
+    }
     const src = useAppSelector((state) => state.player.src)
 
-    console.log("src ,", src)
-
     if (!src) {
-        return <View style={styles.video}>
+        return <View style={{ ...styles.video , justifyContent : "center" , alignItems: "center"}}>
             <Text> Something Went Wrong </Text>
         </View>
     }
@@ -107,11 +106,7 @@ function Video(
             onLoadEnd={() => {
                 setTimeout(() => {
                     console.log('add to watch history')
-                    dispatch(myListActions.addWatchHistory({
-                        ...data,
-                        type,
-                        lastUpdated: Date.now(),
-                    }))
+                    dispatch(myListActions.addWatchHistory(MediaMeta_to_MediaMini(data)))
                 }, 5000);
 
             }}

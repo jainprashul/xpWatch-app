@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { myListActions, selectWatchHistory } from '../store/context/myListSlice'
 import { Card, Divider, Text } from 'react-native-paper'
 import { router } from 'expo-router'
-import { POSTER_HEIGHT, POSTER_WIDTH } from './Shared/List'
+import List, { POSTER_HEIGHT, POSTER_WIDTH } from './Shared/List'
 
 const ContinueWatching = () => {
     const data = useAppSelector(selectWatchHistory)
@@ -18,23 +18,23 @@ const ContinueWatching = () => {
                 data={data}
                 renderItem={({ item }) => {
                     return <Card style={{ margin: 5, width: POSTER_WIDTH }} onPress={() => {
-                        router.push(item.type + '/' + item.id)
+                        router.push(item.media_type + '/' + item.id)
                     }}
                         onLongPress={() => {
                             // dispatch(removeFromMyList(item))
                             console.log('remove')
-                            dispatch(myListActions.removeWatchHistory(item.slug ?? item.id))
+                            dispatch(myListActions.removeWatchHistory(item.id))
                         }}
                     >
-                        <Card.Cover style={styles.poster} source={{ uri: item.coverImage ?? item.image ?? `https://image.tmdb.org/t/p/w500${item.poster_path}` }} />
+                        <Card.Cover style={styles.poster} source={{ uri: item.poster! }} />
                         <Card.Content>
-                            <Text variant='labelLarge' >{item.title?.english ?? item.title ?? item.name}</Text>
-                            {/* <Text variant='bodySmall' >{item.overview ?? }</Text> */}
+                            <Text variant='labelLarge' >{item.title}</Text>
+                            <Text variant='bodySmall' >{item.year}</Text>
                         </Card.Content>
                     </Card>
                 }}
 
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.id}
                 horizontal
                 decelerationRate="fast"
                 snapToInterval={POSTER_WIDTH + 10}

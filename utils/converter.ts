@@ -143,6 +143,7 @@ export function Season_to_SeasonMeta(data : SeasonDetail){
             description: episode.overview,
             image: `https://image.tmdb.org/t/p/w342${episode.still_path}`,
             releaseDate: episode.air_date,
+            runtime: episode.runtime,
         })),
     }
     return _data

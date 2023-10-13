@@ -23,7 +23,7 @@ export function TMDB_to_MediaMini(data : Media){
     return _data
 }
 
-export function TMDMovie_to_MediaMeta(data : MovieDetail){
+export function TMDB_Movie_to_MediaMeta(data : MovieDetail){
         const _data : MovieMeta = {
             id: data.id.toString(),
             title: data.title || data.original_title || '',
@@ -70,7 +70,7 @@ export function TMDMovie_to_MediaMeta(data : MovieDetail){
     } 
 
 
-export function TMDBTv_to_TVMeta(data : TVDetails){
+export function TMDB_TV_to_TVMeta(data : TVDetails){
     const _data : TVMeta = {
         id: data.id.toString(),
         title: data.name || data.original_name || '',

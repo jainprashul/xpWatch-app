@@ -126,7 +126,10 @@ const MediaDetail = ({ data: result, type, children }: Props) => {
                     {
                         type === "movie" ?
                             <Text variant='labelLarge' >{(result as MovieMeta).releaseDate} - {(result as MovieMeta).runtime} mins </Text>
-                            : null
+                       : type === "tv" ? 
+                            <Text variant='labelLarge' >{(result as TVMeta).seasonCount} Seasons &nbsp; {(result as TVMeta).episodeCount} Episodes </Text> 
+                       : null
+                            
                     }
                     <Ratings ratings={result.ratings} />
                 </View>
@@ -143,6 +146,7 @@ const MediaDetail = ({ data: result, type, children }: Props) => {
                     marginVertical: 10,
                 }} >{result.description}</Text>
 
+                {children}
 
                 <Text variant='labelLarge' >Cast</Text>
                 <Divider style={{ marginVertical: 6, }} bold />
@@ -182,8 +186,3 @@ const styles = StyleSheet.create({
         aspectRatio: 2 / 3,
     }
 });
-
-
-function isTVMeta(arg: MovieMeta | TVMeta): arg is TVMeta {
-    return arg.media_type === "tv";
-}

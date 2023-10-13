@@ -4,7 +4,7 @@ import { AnimeDetail } from "../types/animeDetail";
 import { MovieDetail } from "../types/movieDetail";
 import { TVDetails } from "../types/tvDetails";
 import { anilist, animeAPI, animeX, m, movieAPI, t, tv, tvAPI } from "./constants"
-import { TMDMovie_to_MediaMeta } from "./converter";
+import { TMDB_Movie_to_MediaMeta, TMDB_TV_to_TVMeta } from "./converter";
 
 export async function getAnimeData(id : string) {
     try {
@@ -107,32 +107,14 @@ export const getAniEpisodeSources = async (id : string) => {
    }
 }
 
-export const getTVData = async (id : string, seasonID = 1, episodeID = 1) => {
-    try {
-        console.log('tv', t(id));
-        const res = await (await fetch(t(id))).json() as TVDetails;
-        const { recommendations: recommandation, credits: credit, similar, external_ids } = res;
-        delete res.recommendations;
-        delete res.credits;
-        delete res.similar;
+export type AniEpisodeSrc = Awaited<ReturnType<typeof getAniEpisodeSources>>;
 
-        const recommandations = recommandation?.results.map(item => ({ ...item, media_type: 'tv' }));
-        const similars = similar?.results.map(item => ({ ...item, media_type: 'tv' }));
-
-        return {
-            result: res,
-            recommandations,
-            similars,
-            cast: credit?.cast,
-            imdb: external_ids.imdb_id,
-            external_ids
-        }
-    } catch (error) {
-        console.error(error)
-    }
+export async function fetchTVDetails(id : string){
+    const res = await (await fetch(t(id))).json() as TVDetails; 
+    const data = TMDB_TV_to_TVMeta(res);
+    return data;
 }
 
-export type TvShowsX = Awaited<ReturnType<typeof getTVData>>;
 
 export const getTVSeasonData = async (id : string, seasonID = 1) => {
     console.log('tv', tv.season(id, seasonID));
@@ -140,15 +122,8 @@ export const getTVSeasonData = async (id : string, seasonID = 1) => {
     return season;
 }
 
-/**
- * 
- * @param {string} id 
- * @param {number} seasonID 
- * @param {number} episodeID 
- * @param {string} imdb_id
- * @returns 
- */
-export const getTVSeasonEpisodeSources = (id : string, seasonID = 1, episodeID = 1, imdb_id : string) => {
+
+export const getTVSeasonEpisodeSources = (id : string, seasonID: number = 1, episodeID: number = 1, imdb_id : string): { server: string; quality: string; title: string; url: string; }[] => {
     try {
         const watchLinks = [
             {
@@ -194,31 +169,9 @@ export type TvShowsSrc = Awaited<ReturnType<typeof getTVSeasonEpisodeSources>>;
 
 export async function fetchMovie(id : string){
     const res = await (await fetch(m(id))).json() as MovieDetail;
-    const data = TMDMovie_to_MediaMeta(res);
-
+    const data = TMDB_Movie_to_MediaMeta(res);
     return data;
 }
-
-export const getMovieData = async (id : string) => {
-    console.log('movie', m(id));
-    const res = await (await fetch(m(id))).json() as MovieDetail;
-    const { recommendations: recommandation, credits: credit, similar, external_ids } = res;
-
-    delete res.recommendations;
-    delete res.credits;
-    delete res.similar;
-
-    return {
-        result: res as MovieDetail | undefined,
-        cast: credit?.cast,
-        recommandations: recommandation?.results.map(item => ({ ...item, media_type: 'movie' })),
-        similars: similar?.results.map(item => ({ ...item, media_type: 'movie' })),
-        imdb: external_ids.imdb_id,
-        external_ids,
-    }
-}
-
-export type MovieX = Awaited<ReturnType<typeof getMovieData>>;
 
 export const getMovieSources =  (id : string, imdb_id : string) => {
     const watchLinks = [

@@ -29,7 +29,7 @@ const TV = ({  }: Props) => {
     const { name, description, episodeNumber, runtime, releaseDate } = episodes[episode - 1]
 
     useEffect(() => {
-
+        dispatch(playerAction.setLoading(false))
         dispatch(playerAction.setSrc(srcs[0].url))
 
         setTimeout(() => {

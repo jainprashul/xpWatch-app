@@ -9,7 +9,7 @@ import Movie from './Movie';
 import { myListActions } from '../../store/context/myListSlice';
 import TV from './TV';
 import { useKeepAwake } from 'expo-keep-awake';
-import { Text } from 'react-native-paper';
+import { ActivityIndicator, Text } from 'react-native-paper';
 import { MediaMeta_to_MediaMini } from '../../utils/converter';
 import { playerAction } from '../../store/context/playerSlice';
 import AniList from './AniList';
@@ -84,12 +84,18 @@ function Video() {
     const video = React.useRef<WebView>(null);
     const dispatch = useAppDispatch()
     const data = useAppSelector((state) => state.player.data) as any
+    const loadin = useAppSelector((state) => state.player.loading)
 
     if (!data) {
         return null
     }
     const src = useAppSelector((state) => state.player.src)
 
+    if (loadin) {
+        return <View style={{ ...styles.video , justifyContent : "center" , alignItems: "center"}}>
+            <ActivityIndicator size="large" />
+        </View>
+    }
     if (!src) {
         return <View style={{ ...styles.video , justifyContent : "center" , alignItems: "center"}}>
             <Text> Something Went Wrong </Text>

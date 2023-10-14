@@ -1,5 +1,5 @@
-import { Image, StyleSheet, View, FlatList } from 'react-native'
-import React, { useEffect } from 'react'
+import { Image, StyleSheet, View, FlatList, Dimensions } from 'react-native'
+import React, { useEffect, useMemo } from 'react'
 import { Stack, router, useLocalSearchParams } from 'expo-router'
 import { theme } from '../../style/theme'
 import { fetchAnilist } from '../../utils/db'
@@ -13,6 +13,7 @@ import { POSTER_HEIGHT } from '../../components/Shared/List'
 import MediaDetail from '../../components/Shared/MediaDetail'
 import { AnimeMeta } from '../../types/meta/MediaMeta'
 import { playerAction } from '../../store/context/playerSlice'
+const { height } = Dimensions.get('window')
 
 const AniListDetail = () => {
     const dispatch = useAppDispatch();
@@ -30,7 +31,7 @@ const AniListDetail = () => {
     const [data, setData] = React.useState({} as AnimeMeta)
     const [loading, setLoading] = React.useState(true)
 
-    const episode = useAppSelector(state => state.anime.current.episode)
+    const currentEpisodeNo = useAppSelector(state => state.anime.current.episode)
 
 
 
@@ -63,23 +64,37 @@ const AniListDetail = () => {
     const SeasonBox = () => {
         const [sort, setSort] = React.useState(1)
 
+        const _episodes = useMemo(() => {
+            return [...data?.episodes ?? []].sort((a, b) => {
+                if (sort === 1) {
+                    return a.episodeNumber - b.episodeNumber
+                } else {
+                    return b.episodeNumber - a.episodeNumber
+                }
+            })
+        }, [sort])
+
         return <>
             <View style={{
                 marginTop: 10,
             }}>
 
                 <List.Section>
+                    <List.Accordion expanded
+                        onPress={() => {
+                            setSort(-sort)
+                        }}
+                        right={() => <Text>
+                            Sort {sort === 1 ? 'ASC' : 'DESC'}
+                        </Text>}
+                        title={`${data?.episodeCount} Episodes`}>
+                    </List.Accordion>
                     <FlatList
-                        ListHeaderComponent={() => <List.Accordion expanded
-                            onPress={() => {
-                                setSort(-sort)
-                            }}
-                            right={() => <Text>
-                                Sort {sort === 1 ? 'ASC' : 'DESC'}
-                            </Text>}
-                            title={`${data?.episodeCount} Episodes`}>
-                        </List.Accordion>}
-                        data={data?.episodes ?? []}
+                        style={styles.list}
+                        nestedScrollEnabled
+                        initialScrollIndex={_episodes.findIndex(v => v.episodeNumber === currentEpisodeNo)}
+                        isTVSelectable
+                        data={_episodes ?? []}
                         renderItem={({ item: v }) => (<List.Item
                             key={v.id}
                             title={`${v.episodeNumber}. ${v.name}`}
@@ -96,7 +111,7 @@ const AniListDetail = () => {
                                     })
                                 }, 100);
                             }}
-                            
+
                             left={props => <Image {...props} source={{ uri: v.image }} style={{ width: 80, height: 100, borderRadius: 10, marginVertical: 10 }} />}
                         />)
                         }
@@ -107,7 +122,7 @@ const AniListDetail = () => {
     }
 
     return (
-        <MediaDetail data={data} type='anilist' currentEpisode={`E${episode}`} >
+        <MediaDetail data={data} type='anilist' currentEpisode={`E${currentEpisodeNo}`} >
             <SeasonBox />
         </MediaDetail>
     )
@@ -124,5 +139,10 @@ const styles = StyleSheet.create({
     poster: {
         height: POSTER_HEIGHT,
         aspectRatio: 2 / 3,
+    },
+    list: {
+        backgroundColor: theme.colors.background,
+        flexGrow: 0,
+        height: height * .65
     }
 })

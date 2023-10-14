@@ -29,11 +29,11 @@ const AniListWatch = ({ }: Props) => {
 
     useEffect(() => {
         (async () => {
+            dispatch(playerAction.setLoading(true))
             const _srcs = await getAniEpisodeSources(episode.id as string)
-            console.log('srcs', _srcs)
+            dispatch(playerAction.setLoading(false))
             dispatch(playerAction.setSrc(_srcs?.[0]?.url ?? null))
             setSrcs(_srcs)
-
             setTimeout(() => {
                 console.log('add to history')
                 dispatch(myListActions.addToHistory({

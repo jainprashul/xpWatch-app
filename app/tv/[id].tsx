@@ -1,5 +1,5 @@
-import { StyleSheet, View, FlatList, Image, } from 'react-native'
-import React, { useEffect } from 'react'
+import { StyleSheet, View, FlatList, Image, Dimensions } from 'react-native'
+import React, { useEffect, useMemo } from 'react'
 import { router, useLocalSearchParams } from 'expo-router'
 import { fetchTVDetails, getTVSeasonData } from '../../utils/db'
 import { Stack } from 'expo-router'
@@ -11,12 +11,12 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { tvActions } from '../../store/context/tvSlice'
 import { selectHistoryByID } from '../../store/context/myListSlice'
 import analytics from '@react-native-firebase/analytics'
-import { Episode } from '../../types/seasonDetail'
 import MediaDetail from '../../components/Shared/MediaDetail'
-import { TVMeta } from '../../types/meta/MediaMeta'
+import { EpisodeMeta, TVMeta } from '../../types/meta/MediaMeta'
 import { Season_to_SeasonMeta } from '../../utils/converter'
 import { playerAction } from '../../store/context/playerSlice'
 
+const { height } = Dimensions.get('window')
 
 
 const TvPage = () => {
@@ -26,7 +26,7 @@ const TvPage = () => {
     const [data, setData] = React.useState({} as TVMeta)
 
     const history = useAppSelector(selectHistoryByID(id as string))
-    
+
     useEffect(() => {
         if (history) {
             dispatch(tvActions.setSeason(history.s))
@@ -40,10 +40,9 @@ const TvPage = () => {
     const season = useAppSelector(state => state.tv.season)
     const current = useAppSelector(state => state.tv.current)
 
+
     const [loading1, setLoading1] = React.useState(true)
     const [loading2, setLoading2] = React.useState(true)
-    const [sort, setSort] = React.useState(1)
-
 
     useEffect(() => {
         fetchTVDetails(id as string).then((res) => {
@@ -77,39 +76,54 @@ const TvPage = () => {
         </>
     }
 
-    const SeasonBox = () => <>
-        <Picker style={styles.select} mode='dropdown'
-            selectedValue={current.season}
-            onValueChange={(itemValue) => dispatch(tvActions.setSeason(itemValue))}>
-            {data?.seasons?.map(v => <Picker.Item value={v.seasonNumber} key={v.seasonNumber} label={`${v.name}`} />)}
-        </Picker>
+    const SeasonBox = ({ episodes }: { episodes: EpisodeMeta[] }) => {
+        const [sort, setSort] = React.useState(1)
+        const _episodes = useMemo(() => {
+            return [...episodes].sort((a, b) => {
+                if (sort === 1) {
+                    return a.episodeNumber - b.episodeNumber
+                } else {
+                    return b.episodeNumber - a.episodeNumber
+                }
+            })
+        }, [sort])
 
-        <View>
-            <Text variant='labelLarge' >{season?.name}</Text>
-            <Text variant='bodyMedium' >{season?.description}</Text>
-            <Text variant='labelLarge' >{season?.year}</Text>
-            <Text variant='labelLarge' >{season?.episodes?.length} Episodes</Text>
+        return (<>
+            <Picker style={styles.select} mode='dropdown'
+                selectedValue={current.season}
+                onValueChange={(itemValue) => dispatch(tvActions.setSeason(itemValue))}>
+                {data?.seasons?.map(v => <Picker.Item value={v.seasonNumber} key={v.seasonNumber} label={`${v.name}`} />)}
+            </Picker>
 
-            <List.Section>
+            <View>
+                <Text variant='labelLarge' >{season?.name}</Text>
+                <Text variant='bodyMedium' >{season?.description}</Text>
+                <Text variant='labelLarge' >{season?.year}</Text>
+                <Text variant='labelLarge' >{season?.episodes?.length} Episodes</Text>
+
+                <List.Section>
+                    <List.Accordion expanded
+                        onPress={() => {
+                            setSort(-sort)
+                        }}
+                        right={() => <Text>
+                            Sort {sort === 1 ? 'ASC' : 'DESC'}
+                        </Text>}
+
+                        title="Episodes">
+                    </List.Accordion>
                     <FlatList
-                        ListHeaderComponent={()=> <List.Accordion expanded
-                            onPress={() => {
-                               setSort(-sort)
-                           }}
-                           right={() => <Text>
-                               Sort {sort === 1 ? 'ASC' : 'DESC'}
-                           </Text>}
-                           
-                               title="Episodes">
-                           </List.Accordion>}
-                        data={season.episodes}
+                        style={styles.list}
+                        nestedScrollEnabled
+                        initialScrollIndex={_episodes.findIndex(v => v.episodeNumber === current.episode)}
+                        data={_episodes}
                         renderItem={({ item: v }) => (<List.Item
                             key={v.id}
                             title={`${v.episodeNumber}. ${v.name}`}
                             description={v.description}
                             onPress={() => {
                                 dispatch(tvActions.setEpisode(v.episodeNumber))
-                            dispatch(playerAction.setData(data))
+                                dispatch(playerAction.setData(data))
                                 setTimeout(() => {
                                     router.push({
                                         pathname: 'player',
@@ -119,17 +133,18 @@ const TvPage = () => {
                                     })
                                 }, 100);
                             }}
-                            left={props => <Image {...props} source={{ uri: v.image }} style={{ width: 80, height: 100, borderRadius: 10, marginVertical: 10 }} />}
+                            left={props => <Image {...props} source={{ uri: v.image }} style={{ width: 80, height: 100, borderRadius: 10 }} />}
                         />)}
                         keyExtractor={item => item.id.toString()}
                     />
-            </List.Section>
-        </View></>
+                </List.Section>
+            </View></>)
+    }
 
     return (
-      <MediaDetail data={data} type='tv' currentEpisode={`S${current.season} ` + `E${current.episode}`} >
-            <SeasonBox />
-      </MediaDetail>
+        <MediaDetail data={data} type='tv' currentEpisode={`S${current.season} ` + `E${current.episode}`} >
+            <SeasonBox episodes={season.episodes} />
+        </MediaDetail>
     )
 }
 
@@ -141,4 +156,10 @@ const styles = StyleSheet.create({
         backgroundColor: theme.colors.primary,
         marginBottom: 20,
     },
+
+    list: {
+        backgroundColor: theme.colors.background,
+        flexGrow: 0,
+        height: height * .65
+    }
 })

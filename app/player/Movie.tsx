@@ -18,6 +18,7 @@ const Movie = ({  }: Props) => {
     const srcs = getMovieSources(data.id, data.imdb)
 
     useEffect(() => {
+        dispatch(playerAction.setLoading(false))
         dispatch(playerAction.setSrc(srcs[0].url))
         analytics().logEvent('playing', {
             content_type: 'movie',

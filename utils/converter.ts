@@ -196,7 +196,7 @@ export function AniList_to_AnimeMeta(data : AniListDetail){
             image: character.image,
         })) ?? [],
 
-        tagline: data.title.native,
+        tagline: data.title.romaji,
         recommendations: data.recommendations?.map((recommendation) => ({
             id: recommendation.id.toString(),
             title:  recommendation.title.english || recommendation.title.romaji || recommendation.title.native || '',

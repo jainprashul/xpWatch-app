@@ -99,6 +99,9 @@ const myListSlice = createSlice({
             const id = action.payload
             delete state.data.watchHistory[id]
         },
+        clearALL(state) {
+            state.data = initState.data
+        },
     }
 })
 

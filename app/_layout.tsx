@@ -12,6 +12,9 @@ import { StatusBar } from 'expo-status-bar';
 import * as Updates from 'expo-updates';
 import { useState } from 'react';
 import { deleteAllData } from '../utils/asyncStorage';
+import { homeActions } from '../store/context/homeSlice';
+import { useAppDispatch } from '../store/hooks';
+import { myListActions } from '../store/context/myListSlice';
 export default function Layout() {
 
   return (
@@ -27,6 +30,7 @@ export default function Layout() {
 
 function AppLayout() {
   const [loading, setLoading] = useState(false)
+  const dispatch = useAppDispatch()
 
   Updates.useUpdateEvents(async (event) => {
     if (event.type === Updates.UpdateEventType.UPDATE_AVAILABLE) {
@@ -35,11 +39,14 @@ function AppLayout() {
       try {
         const res = await Updates.fetchUpdateAsync()
         setLoading(false)
-        alert('Update downloaded, will install now');
-        alert(JSON.stringify(res));
+        alert('Update downloaded, will install now, please restart the app. This install needs to delete all existing data. Sorry for the inconvenience');
+        dispatch(homeActions.clearALL())
+        dispatch(myListActions.clearALL())
 
-        deleteAllData()
-        await Updates.reloadAsync();
+        setTimeout(async () => {
+          await Updates.reloadAsync();
+        }, 1000)
+        
       } catch (error) {
         alert('Error while updating. Restart the app to update')
       }

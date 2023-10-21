@@ -2,7 +2,7 @@
   "expo": {
     "name": "xpWatch - Watch free your favorite movie , tv shows & anime!",
     "slug": "xpwatch",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -27,7 +27,7 @@
         "backgroundColor": "#151515"
       },
       "package": "com.jainprashul.xpwatch",
-      "runtimeVersion": "1.0.0",
+      "runtimeVersion": "1.0.1",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -35,7 +35,7 @@
           "data": [
             {
               "scheme": "https",
-              "host": "*.xpwatch.vercel.app",
+              "host": "xpwatch.vercel.app/*",
               "pathPrefix": "/records"
             }
           ],

@@ -35,8 +35,7 @@
           "data": [
             {
               "scheme": "https",
-              "host": "xpwatch.vercel.app/*",
-              "pathPrefix": "/records"
+              "host": "xpwatch-v2.pages.dev/*"
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]

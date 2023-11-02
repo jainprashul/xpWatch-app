@@ -27,7 +27,7 @@ type Props = {
 
     const List = ({ data, name, horizontal, link }: Props) => {
     if (data?.length === 0) return null;
-    const _data = useMemo(() => data.filter(m => m.poster), [data])
+    const _data = useMemo(() => data?.filter(m => m.poster), [data])
     if (horizontal) return <HorizontalList data={_data} name={name} link={link} />
     return (
         <>
